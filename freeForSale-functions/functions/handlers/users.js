@@ -1,4 +1,4 @@
-const { db } = require('../util/admin');
+const { admin, db } = require('../util/admin');
 const config = require('../util/config');
 const firebase = require('firebase');
 firebase.initializeApp(config);
@@ -82,4 +82,57 @@ exports.login = (req, res) => {
                     .json({ general: 'Wrong credentials, please try again'});
             } else return res.status(500).json({ error: err.code}); 
         });
+}
+
+//npm install --save busboy
+exports.uploadPhoto = (req, res) => {
+    const BusBoy = require('busboy');
+    const path = require('path');
+    const os = require('os');
+    //filesystem
+    const fs = require('fs');
+
+    const busboy = new BusBoy({ headers: req.headers });
+    
+    let imageFileName;
+
+    //initialize as empty object
+    let imageToBeUploaded = {};
+
+    //file event
+    busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
+        console.log(fieldname);
+        console.log(filename);
+        console.log(mimetype);
+        // my.image.png
+        const imageExtension = filename.split('.')[filename.split('.').length - 1];
+        // 726437292.png
+        const imageFileName = `${Math.round(Math.random() *  1000000000)}.${imageExtension}`;
+        const filepath = path.join(os.tmpdir(), imageFileName);
+        imageToBeUploaded = { filepath, mimetype };
+
+        file.pipe(fs.createWriteStream(filepath));
+    });
+    busboy.on('finish', () => {
+        admin.storage().bucket().upload(imageToBeUploaded.filepath, {
+            resumable: false,
+            metadata: {
+                metadata: {
+                    contentType: imageToBeUploaded.mimetype
+                }
+            }
+        })
+        .then(() => {
+            //construct img URL to link to user 
+            const imageUrl = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media`
+            return db.doc(`/users/${req.user.username}`).update({ imageUrl} );
+        })
+        .then(() => {
+            return res.json({ msg: 'Image uploaded successfuly'});
+        })
+        .catch(err => {
+            console.error(err);
+            return res.status(500).json({ error: err.code});
+        })
+    })
 }
