@@ -23,10 +23,10 @@ app.get('/posts', getAllPosts);
 app.post('/post', FBAuth, postOne);
 app.get('/post/:postId', getPost); //colon tells app that it's a route parameter 
 //TODO: delete post
-app.get('/posts/:postId/like', FBAuth, likePost);
-app.get('/posts/:postId/unlike', FBAuth, unlikePost);
+app.get('/post/:postId/likes', FBAuth, likePost);
+app.get('/post/:postId/unlikes', FBAuth, unlikePost);
 //Protected route via FBAuth
-app.post(`/post/:postId/comment`, FBAuth, commentOnPost);
+app.post('/post/:postId/comment', FBAuth, commentOnPost);
 
 
 
