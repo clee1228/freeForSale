@@ -8,7 +8,8 @@ const {
     getPost,
     commentOnPost,
     likePost,
-    unlikePost
+    unlikePost,
+    delPost
 } = require('./handlers/posts');
 const { 
     signup, 
@@ -22,7 +23,7 @@ const {
 app.get('/posts', getAllPosts);
 app.post('/post', FBAuth, postOne);
 app.get('/post/:postId', getPost); //colon tells app that it's a route parameter 
-//TODO: delete post
+app.delete('/post/:postId', FBAuth, delPost);
 app.get('/post/:postId/likes', FBAuth, likePost);
 app.get('/post/:postId/unlikes', FBAuth, unlikePost);
 //Protected route via FBAuth
