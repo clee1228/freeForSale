@@ -17,7 +17,9 @@ const {
     login, 
     uploadPhoto, 
     addUserDetails, 
-    getUserDetails 
+    getAuthenticatedUser,
+    getUserDetails,
+    markNotifsRead
 } = require('./handlers/users');
 
 //Post Routes; //Protected route via FBAuth using tokens
@@ -34,7 +36,9 @@ app.post('/signup', signup);
 app.post('/login', login);
 app.post('/user/image', FBAuth, uploadPhoto);
 app.post('/user', FBAuth, addUserDetails);
-app.get('/user/', FBAuth, getUserDetails)
+app.get('/user', FBAuth, getAuthenticatedUser);
+app.get('/user/:username', getUserDetails);
+app.post('/notifications', FBAuth, markNotifsRead);
 
 //pass in app instead of one fn/route which automatically turns into multiple routes
 exports.api = functions.https.onRequest(app);

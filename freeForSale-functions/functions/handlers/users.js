@@ -106,12 +106,50 @@ exports.addUserDetails = (req, res) => {
         });
 };
 
-/*** GET OWN USER DETAILS ***/
+/*** GET ANY USER'S DETAILS */
 exports.getUserDetails = (req, res) => {
+    let userData = {};
+    db.doc(`/users/${req.params.username}`)
+        .get()
+        .then((doc) => {
+            if(doc.exists){
+                userData.user = doc.data();
+                return db.collection('posts')
+                    .where('username', '==', req.params.username)
+                    .orderBy('createdAt', 'desc')
+                    .get();
+            } else {
+                return res.status(404).json({ error: 'User not found'});
+            }
+        })
+        .then((data) => {
+            userData.posts = [];
+            data.forEach((doc) => {
+                userData.posts.push({
+                    body: doc.data().body,
+                    createdAt: doc.data().createdAt,
+                    username: doc.data().username,
+                    userImage: doc.data().userImage,
+                    likeCount: doc.data().likeCount,
+                    commentCount: doc.data().commentCount,
+                    postId: doc.id
+                })
+            });
+            return res.json(userData);
+        })
+        .catch((err) => {
+            console.error(err);
+            return res.status(500).json({ error: err.code });
+        });
+};
+
+/*** GET OWN USER DETAILS ***/
+exports.getAuthenticatedUser = (req, res) => {
     //response data obj we'll add to
     let userData = {};
     //get user
-    db.doc(`/users/${req.user.username}`).get()
+    db.doc(`/users/${req.user.username}`)
+        .get()
         .then((doc) => {
             if(doc.exists){
                 userData.creds = doc.data();
@@ -123,6 +161,25 @@ exports.getUserDetails = (req, res) => {
             userData.likes = [];
             data.forEach(doc => {
                 userData.likes.push(doc.data());
+            });
+            return db.collection('notifications')
+                .where('recipient', '==', req.user.username)
+                .orderBy('createdAt', 'desc')
+                .limit(10)
+                .get();
+        })
+        .then((data) => {
+            userData.notifications = [];
+            data.forEach((doc) => {
+                userData.notifications.push({
+                    recipient: doc.data().recipient,
+                    sender: doc.data().sender,
+                    createdAt: doc.data().createdAt,
+                    postId: doc.data().postId,
+                    type: doc.data().type,
+                    read: doc.data().read,
+                    notificationId: doc.id
+                })
             });
             return res.json(userData);
         })
@@ -193,4 +250,21 @@ exports.uploadPhoto = (req, res) => {
     });
     //rawBody is a property that's in every request
     busboy.end(req.rawBody);
+};
+
+/*** Mark Notifications Read ***/
+exports.markNotifsRead = (req, res) => {
+    let batch = db.batch();
+    req.body.forEach((notificationId) => {
+        const notif = db.doc(`/notifications/${notificationId}`);
+        batch.update(notif, { read: true });
+    });
+    batch.commit()
+        .then(() => {
+            return res.json({ msg: 'Notifications marked read'});
+        })
+        .catch((err) => {
+            console.error(err);
+            return res.status(500).json({ error: err.code });
+        });
 };
