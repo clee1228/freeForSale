@@ -41,13 +41,18 @@ exports.postOne = (request, response) => {
         //body property of the body of the request
         body: request.body.body,
         username: request.user.username,
-        createdAt: new Date().toISOString()
+        userImage: req.user.imageUrl,
+        createdAt: new Date().toISOString(),
+        likeCount: 0,
+        commentCount: 0 
     };
 
     db.collection('posts')
         .add(newPost)
         .then((doc) => {
-            response.json({msg: `document ${doc.id} created successfully` });
+            const resPost = newPost;
+            resPost.postId = doc.id;
+            response.json(resPost);
         })  
         .catch((err) => {
             response.status(500).json({ error: 'something went wrong '});
@@ -112,6 +117,9 @@ exports.commentOnPost = (req, res) => {
             res.status(500).json({ error: 'Something went wrong' });
         });
 };
+
+//like a post
+
 
 
 /*****  without using express ******/

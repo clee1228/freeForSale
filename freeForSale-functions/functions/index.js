@@ -6,7 +6,9 @@ const {
     getAllPosts, 
     postOne, 
     getPost,
-    commentOnPost
+    commentOnPost,
+    likePost,
+    unlikePost
 } = require('./handlers/posts');
 const { 
     signup, 
@@ -21,8 +23,8 @@ app.get('/posts', getAllPosts);
 app.post('/post', FBAuth, postOne);
 app.get('/post/:postId', getPost); //colon tells app that it's a route parameter 
 //TODO: delete post
-//TODO: like a post
-//TODO: unlike a post
+app.get('/posts/:postId/like', FBAuth, likePost);
+app.get('/posts/:postId/unlike', FBAuth, unlikePost);
 //Protected route via FBAuth
 app.post(`/post/:postId/comment`, FBAuth, commentOnPost);
 
