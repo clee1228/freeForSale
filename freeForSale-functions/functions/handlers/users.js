@@ -3,7 +3,7 @@ const config = require('../util/config');
 const firebase = require('firebase');
 firebase.initializeApp(config);
 
-const { validateSignupData, validateLoginData } = require('../util/validate');
+const { validateSignupData, validateLoginData, reduceUserDetails } = require('../util/validate');
 
 /*** USER SIGN UP ***/
 exports.signup = (req, res) => {
@@ -93,7 +93,47 @@ exports.login = (req, res) => {
         });
 };
 
-//npm install --save busboy
+/*** ADD USER DETAILS ***/
+exports.addUserDetails = (req, res) => {
+    let userDetails = reduceUserDetails(req.body);
+    db.doc(`/users/${req.user.username}`).update(userDetails)
+        .then(() => {
+            return res.json({ msg: 'Details added successfully'});
+        })
+        .catch((err) => {
+            console.error(err);
+            return res.status(500).json({error: err.code});
+        });
+};
+
+/*** GET OWN USER DETAILS ***/
+exports.getUserDetails = (req, res) => {
+    //response data obj we'll add to
+    let userData = {};
+    //get user
+    db.doc(`/users/${req.user.username}`).get()
+        .then((doc) => {
+            if(doc.exists){
+                userData.creds = doc.data();
+                return db.collection('likes').where('username', '==', req.user.username).get();
+
+            }
+        })
+        .then((data) => {
+            userData.likes = [];
+            data.forEach(doc => {
+                userData.likes.push(doc.data());
+            });
+            return res.json(userData);
+        })
+        .catch((err) => {
+            console.error(err);
+            return res.status(500).json({ error: err.code});
+        });
+};
+
+/*** UPLOAD USER PROFILE PIC 
+    npm install --save busboy  ***/
 exports.uploadPhoto = (req, res) => {
     const BusBoy = require('busboy');
     const path = require('path');
@@ -110,7 +150,11 @@ exports.uploadPhoto = (req, res) => {
 
     //file event
     busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
-        console.log(fieldname, file, filename, encoding, mimetype);
+        
+        if(mimetype !== 'image/jpeg' && mimetype !== 'image/png'){
+            //status code 400 = bad request
+            return res.status(400).json({ error: 'Wrong file type submitted'});
+        } 
         
         // my.image.png
         const imageExtension = filename.split('.')[filename.split('.').length - 1];

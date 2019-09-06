@@ -1,21 +1,42 @@
 const functions = require('firebase-functions');
-
-//express
 const app = require('express')();
-
 const FBAuth = require('./util/fbAuth');
 
-const { getAllPosts, postOne} = require('./handlers/posts');
-const { signup, login, uploadPhoto } = require('./handlers/users');
+const { 
+    getAllPosts, 
+    postOne, 
+    getPost,
+    commentOnPost
+} = require('./handlers/posts');
+const { 
+    signup, 
+    login, 
+    uploadPhoto, 
+    addUserDetails, 
+    getUserDetails 
+} = require('./handlers/users');
 
-//Post Routes
+//Post Routes (use FBAuth to protect the data b/c we get it via token)
 app.get('/posts', getAllPosts);
 app.post('/post', FBAuth, postOne);
+app.get('/post/:postId', getPost); //colon tells app that it's a route parameter 
+//TODO: delete post
+//TODO: like a post
+//TODO: unlike a post
+//Protected route via FBAuth
+app.post(`/post/:postId/comment`, FBAuth, commentOnPost);
+
+
+
 
 //User Routes
 app.post('/signup', signup);
 app.post('/login', login);
-app.post('/userProfile/image', FBAuth, uploadPhoto);
+app.post('/user/image', FBAuth, uploadPhoto);
+app.post('/user', FBAuth, addUserDetails);
+app.get('/user/', FBAuth, getUserDetails)
+
+
 
 
 //pass in app instead of one fn/route which automatically turns into multiple routes

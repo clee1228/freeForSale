@@ -55,6 +55,64 @@ exports.postOne = (request, response) => {
         });
 }
 
+//fetch post by postID
+exports.getPost = (req, res) => {
+    let postData = {};
+    db.doc(`/posts/${req.params.postId}`).get()
+        .then((doc) => {
+            if(!doc.exists){
+                return res.status(404).json({ error: 'Post not found'});
+            } 
+            postData = doc.data();
+            postData.postId = doc.id;
+            return db
+                .collection('comments')
+                .orderBy('createdAt', 'desc')
+                .where('postId', '==', req.params.postId)
+                .get();
+        })
+        //query snapshots cuz it could be mult. docs
+        .then((data) => {
+            postData.comments = [];
+            data.forEach((doc) => {
+                postData.comments.push(doc.data());
+            });
+            return res.json(postData);
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).json({ error: err.code});
+        });
+};
+
+//comment on post
+exports.commentOnPost = (req, res) => {
+    if(req.body.body.trim() === '') return res.status(400).json({ error: 'Must not be empty'});
+
+    const newComment = {
+        body: req.body.body,
+        createdAt: new Date().toISOString(),
+        postId: req.params.postId,
+        username: req.user.username,
+        userImage: req.user.imageUrl
+    };
+
+    db.doc(`/posts/${req.params.postId}`).get()
+        .then((doc) => {
+            if(!doc.exists){
+                return res.status(404).json({ error: 'Post not found'});
+            }
+            return db.collection('comments').add(newComment);
+        })
+        .then(() => {
+            res.json(newComment);
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).json({ error: 'Something went wrong' });
+        });
+};
+
 
 /*****  without using express ******/
 
