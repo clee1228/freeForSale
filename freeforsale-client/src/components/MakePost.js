@@ -17,20 +17,22 @@ import CloseIcon from '@material-ui/icons/Close';
 
 // Redux
 import { connect } from 'react-redux';
-import { createPost } from '../redux/actions/dataActions';
+import { createPost, clearErrors } from '../redux/actions/dataActions';
 
 const styles = (theme) => ({
     ...theme.spreadThis,
     submitButton:{
-        position: 'relative'
+        position: 'relative',
+        float: 'right',
+        marginTop: 10
     },
     progressSpinner: { 
         position: 'absolute'
     },
     closeButton: {
         position: 'absolute',
-        left: '90%',
-        top: '10%'
+        left: '91%',
+        top: '6%'
     }
 });
 
@@ -49,8 +51,7 @@ class MakePost extends Component{
             });
         };
         if(!nextProps.UI.errors && !nextProps.UI.loading){
-            this.setState({ body: '' });
-            this.handleClose();
+            this.setState({ body: '', open: false, errors: {} });
         }
     }
 
@@ -59,9 +60,11 @@ class MakePost extends Component{
     };
 
     handleClose = () => {
+        this.props.clearErrors();
         this.setState({ 
             open: false,
-            errors: {}})
+            errors: {}
+        });
     };
 
     handleChange = (event) => {
@@ -139,6 +142,7 @@ class MakePost extends Component{
 
 MakePost.propTypes = {
     createPost: PropTypes.func.isRequired,
+    clearErrors: PropTypes.func.isRequired,
     UI: PropTypes.object.isRequired
 };
 
@@ -148,5 +152,5 @@ const mapStateToProps = (state) => ({
 
 export default connect(
     mapStateToProps, 
-    { createPost }
+    { createPost, clearErrors }
     )(withStyles(styles)(MakePost));

@@ -1,6 +1,7 @@
 /* Handles all actions related to our data */
 import { 
     SET_POSTS,
+    SET_POST,
     LIKE_POST, 
     UNLIKE_POST, 
     LOADING_DATA,
@@ -21,6 +22,11 @@ export default function(state = initialState, action){
                 ...state,
                 loading: true
             }
+        case SET_POST:
+            return{
+                ...state,
+                post: action.payload
+            };
         case SET_POSTS:
             return{
                 ...state,
