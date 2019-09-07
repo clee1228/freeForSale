@@ -56,15 +56,15 @@ export const signupUser = (newUserData, history) => (dispatch) => {
 };
 
  //this action sets type and user data
- export const getUserData = () => (dispatch) => {
-     dispatch( { type: LOADING_USER });
-     axios
+export const getUserData = () => (dispatch) => {
+    dispatch( { type: LOADING_USER });
+    axios
         .get('/user')
         .then((res) => {
             dispatch({
                 type: SET_USER,
                 payload: res.data
-            })
+            });
         })
         .catch((err) => console.log(err));
  };
