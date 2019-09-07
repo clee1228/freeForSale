@@ -13,8 +13,8 @@ import store from './redux/store';
 import { SET_AUTHENTICATED } from './redux/types';
 import { logout, getUserData } from  './redux/actions/userActions';
 
-// Components
-import Navbar from './components/Navbar';
+// Components 
+import Navbar from './components/layout/Navbar';
 import AuthRoute from './util/AuthRoute';
 
 // Pages

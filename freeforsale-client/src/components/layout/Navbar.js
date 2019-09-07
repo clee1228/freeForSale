@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import {Link} from 'react-router-dom';
-import MyButton from '../util/MyButton';
-import MakePost from './MakePost';
+import MyButton from '../../util/MyButton';
+import MakePost from '../post/MakePost';
 
 // Material-UI 
 import AppBar from '@material-ui/core/AppBar';
