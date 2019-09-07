@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import withStyles from '@material-ui/core/styles/withStyles';
 import PropTypes from 'prop-types';
 import AppIcon from '../images/icon.png';
-import axios from 'axios';
 import {Link} from 'react-router-dom';
-
 
 //MUI Stuff
 import Grid from '@material-ui/core/Grid';
@@ -12,6 +10,10 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
+
+// Redux Stuff (Connect this component to app)
+import { connect } from 'react-redux';
+import { loginUser } from '../redux/actions/userActions';
 
 //access global theme from App.js
 const styles = (theme) => ({ ...theme.spreadThis });
@@ -22,49 +24,35 @@ export class login extends Component {
         this.state = {
             email: '',
             password: '',
-            loading: false, //spinner during login
             errors: {}
-        }
+        }; 
     }
+
+    //if errors during login, UI will display them here
+    componentWillReceiveProps(nextProps){
+        if(nextProps.UI.errors){
+            this.setState({ errors: nextProps.UI.errors});
+        }
+    };
 
     handleSubmit = (event) => {
         event.preventDefault();
-        this.setState({
-            loading: true
-        });
         const userData = {
             email: this.state.email,
             password: this.state.password
-        }
-        //res.data b/c we're using axios
-        axios.post('/login', userData)
-            .then(res => {
-                console.log(res.data);
-                localStorage.setItem('FBIdToken', `Bearer ${res.data.token}`);
-                this.setState({
-                    loading: false
-                });
-                //method to push a path & redirect to it (to homepage)
-                this.props.history.push('/');
-            })
-            .catch((err) => {
-                this.setState({
-                    errors: err.response.data,
-                    loading: false
-                })
-            })
+        };
+        //connect component to userAction
+        this.props.loginUser(userData, this.props.history);
     };
-
-
+   
     handleChange = (event) =>{ 
         this.setState({
             [event.target.name]: event.target.value
-        })
-     };
+        })};
 
     render() {
-        const { classes } = this.props;
-        const { errors, loading } = this.state;
+        const { classes, UI: { loading } } = this.props;
+        const { errors } = this.state;
         return (
             <Grid container className={classes.form}>
                 <Grid item sm/>
@@ -127,7 +115,21 @@ export class login extends Component {
 }
 
 login.propTypes = {
-    classes: PropTypes.object.isRequired
-}
+    classes: PropTypes.object.isRequired,
+    loginUser: PropTypes.func.isRequired,
+    user: PropTypes.object.isRequired,
+    UI: PropTypes.object.isRequired
+};
 
-export default withStyles(styles)(login);
+//user & UI are brought in from global state and mapped
+// into our Component props
+const mapStateToProps = (state) => ({
+    user: state.user,
+    UI: state.UI
+});
+
+// what actions we're going to use
+const mapActionsToProps = {
+    loginUser
+}
+export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(login));

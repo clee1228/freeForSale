@@ -2,15 +2,18 @@ import React, { Component } from 'react';
 import withStyles from '@material-ui/core/styles/withStyles';
 import PropTypes from 'prop-types';
 import AppIcon from '../images/icon.png';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 
-//MUI Stuff
+// MUI Stuff
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
+
+// Redux 
+import { connect } from 'react-redux';
+import { signupUser } from '../redux/actions/userActions';
 
 //access global theme from App.js
 const styles = (theme) => ({ ...theme.spreadThis })
@@ -23,10 +26,16 @@ export class signup extends Component {
             password: '',
             confirmPw: '',
             username: '',
-            loading: false, //spinner during login
             errors: {}
         };
     }
+
+     //if errors during signup, UI will display them here
+     componentWillReceiveProps(nextProps){
+        if(nextProps.UI.errors){
+            this.setState({ errors: nextProps.UI.errors});
+        }
+    };
 
     handleSubmit = (event) => {
         event.preventDefault();
@@ -38,24 +47,8 @@ export class signup extends Component {
             password: this.state.password,
             confirmPw: this.state.confirmPw,
             username: this.state.username
-        }
-        //res.data b/c we're using axios
-        axios.post('/signup', newUserData)
-            .then((res) => {
-                console.log(res.data);
-                localStorage.setItem('FBIdToken', `Bearer ${res.data.token}`);
-                this.setState({
-                    loading: false
-                });
-                //method to push a path & redirect to it (to homepage)
-                this.props.history.push('/');
-            })
-            .catch((err) => {
-                this.setState({
-                    errors: err.response.data,
-                    loading: false
-                })
-            })
+        };
+        this.props.signupUser(newUserData, this.props.history);
     };
 
 
@@ -66,8 +59,8 @@ export class signup extends Component {
      };
 
     render() {
-        const { classes } = this.props;
-        const { errors, loading } = this.state;
+        const { classes, UI: { loading } } = this.props;
+        const { errors } = this.state;
         return (
             <Grid container className={classes.form}>
                 <Grid item sm/>
@@ -152,7 +145,15 @@ export class signup extends Component {
 }
 
 signup.propTypes = {
-    classes: PropTypes.object.isRequired
-}
+    classes: PropTypes.object.isRequired,
+    user: PropTypes.object.isRequired,
+    UI: PropTypes.object.isRequired,
+    signupUser: PropTypes.func.isRequired
+};
 
-export default withStyles(styles)(signup);
+const mapStateToProps = (state) => ({
+    user: state.user,
+    UI: state.UI
+});
+ 
+export default connect(mapStateToProps, { signupUser } )(withStyles(styles)(signup));
