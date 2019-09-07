@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import withStyles from '@material-ui/core/styles/withStyles';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import PropTypes from 'prop-types';
+import DeletePost from './DeletePost';
 
 //MUI Stuff
 import Card from '@material-ui/core/Card';
@@ -19,11 +20,11 @@ import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
 // Redux
 import { connect } from 'react-redux';
 import { likePost, unlikePost } from '../redux/actions/dataActions';
-import dataReducer from '../redux/reducers/dataReducer';
 import MyButton from '../util/MyButton';
 
 const styles = {
     card: {
+        position: 'relative',
         display: 'flex',
         marginBottom: 20
     },
@@ -72,10 +73,13 @@ class Post extends Component {
                 commentCount
             },
             user: {
-                authenticated
+                authenticated,
+                creds: { userName }
             }
         } = this.props;
 
+        console.log('HANDLE', username);
+        console.log('hallo', userName);
         const likeButton = !authenticated ? (
             <MyButton tip="Like">
                 <Link to="/login">
@@ -100,6 +104,12 @@ class Post extends Component {
             
 
         )
+
+        const deleteButton = authenticated && userName === username ? (
+            <DeletePost postId={postId} />
+        ) : null
+
+
         return (
             <Card className={classes.card}>
                 <CardMedia 
@@ -111,9 +121,20 @@ class Post extends Component {
                     <Typography 
                         variant="h5" 
                         component={Link} 
-                        to={`/users/${username}`}
-                        color="primary"> {username}</Typography>
-                    <Typography variant="body2" color="textSecondary">{dayjs(createdAt).fromNow()}</Typography>
+                        to={`/users/${userName}`}
+                        color="primary"> 
+                        
+                        {userName}
+                    </Typography>
+
+
+                    {deleteButton}
+
+                    <Typography 
+                        variant="body2" 
+                        color="textSecondary">
+                            {dayjs(createdAt).fromNow()}
+                    </Typography>
                     <Typography variant="body1">{body}</Typography>
 
                     {likeButton}
