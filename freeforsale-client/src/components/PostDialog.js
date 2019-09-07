@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
 import MyButton from '../util/MyButton';
+import LikeButton from './LikeButton';
 import dayjs from 'dayjs';
 import { Link } from 'react-router-dom';
 
@@ -78,7 +79,9 @@ class PostDialog extends Component{
         } = this.props;
 
         const dialogMarkup = loading ? (
-            <CircularProgress size={200}/>
+            <div className={classes.spinnerDiv}>
+                <CircularProgress size={200} thickness={2}/>
+            </div>
         ) : (
             <Grid container spacing={16}>
                 <Grid item sm={5}>
@@ -105,6 +108,13 @@ class PostDialog extends Component{
                     <Typography variant="body1">
                         {body}
                     </Typography>
+                    <LikeButton postId={postId}/>
+                    <span>{likeCount} Likes</span>
+
+                    <MyButton tip="Comments">
+                        <ChatIcon color="primary"/>
+                    </MyButton>
+                    <span> {commentCount} Comments</span>
                    
                 </Grid>
             </Grid>
