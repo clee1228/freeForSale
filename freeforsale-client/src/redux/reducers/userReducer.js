@@ -48,11 +48,11 @@ export default function(state = initialState, action){
                 likes: [
                     ...state.likes,
                     {
-                        username: state.creds.username,
+                        userHandle: state.creds.username,
                         postId: action.payload.postId
                     }
                 ]
-            }
+            };
         case UNLIKE_POST:
             return{
                 ...state,

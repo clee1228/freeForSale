@@ -67,19 +67,19 @@ class Post extends Component {
                 body, 
                 createdAt, 
                 userImage, 
-                username, 
+                userHandle, 
                 postId, 
                 likeCount, 
                 commentCount
             },
             user: {
                 authenticated,
-                creds: { userName }
+                creds: { username }
             }
         } = this.props;
 
         console.log('HANDLE', username);
-        console.log('hallo', userName);
+        console.log('aaaah', userHandle);
         const likeButton = !authenticated ? (
             <MyButton tip="Like">
                 <Link to="/login">
@@ -105,7 +105,7 @@ class Post extends Component {
 
         )
 
-        const deleteButton = authenticated && userName === username ? (
+        const deleteButton = authenticated && userHandle === username ? (
             <DeletePost postId={postId} />
         ) : null
 
@@ -121,10 +121,10 @@ class Post extends Component {
                     <Typography 
                         variant="h5" 
                         component={Link} 
-                        to={`/users/${userName}`}
+                        to={`/users/${username}`}
                         color="primary"> 
                         
-                        {userName}
+                        {username}
                     </Typography>
 
 

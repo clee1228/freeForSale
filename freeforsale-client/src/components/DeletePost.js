@@ -10,7 +10,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 
 // Icons
-import DeleteOutline from '@material-ui/icons/DeleteOutline';
+import DeleteOutline from '@material-ui/icons/DeleteOutlined';
 
 // Redux
 import { connect } from 'react-redux';
@@ -20,8 +20,8 @@ import { deletePost } from '../redux/actions/dataActions';
 const styles = {
     deleteButton: {
         position: 'absolute',
-        left: '90%',
-        top: '10%'
+        left: '93%',
+        top: '3%'
       }
 };
 
