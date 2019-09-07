@@ -48,12 +48,12 @@ exports.sendLikeNotifs = functions.region('us-central1').firestore.document('lik
         return db.doc(`/posts/${snapshot.data().postId}`)
             .get()
             .then((doc) => {
-                if(doc.exists && doc.data().username !== snapshot.data().username){
+                if(doc.exists && doc.data().userHandle !== snapshot.data().userHandle){
                     return db.doc(`/notifications/${snapshot.id}`)
                         .set({
                             createdAt: new Date().toISOString(),
-                            recipient: doc.data().username,
-                            sender: snapshot.data().username,
+                            recipient: doc.data().userHandle,
+                            sender: snapshot.data().userHandle,
                             type: 'like',
                             read: false,
                             postId: doc.id
@@ -81,12 +81,12 @@ exports.sendCommentNotifs = functions.region('us-central1').firestore.document('
         return db.doc(`/posts/${snapshot.data().postId}`)
             .get()
             .then((doc) => {
-                if(doc.exists && doc.data().username !== snapshot.data().username){
+                if(doc.exists && doc.data().userHandle !== snapshot.data().userHandle){
                     return db.doc(`/notifications/${snapshot.id}`)
                         .set({
                             createdAt: new Date().toISOString(),
-                            recipient: doc.data().username,
-                            sender: snapshot.data().username,
+                            recipient: doc.data().userHandle,
+                            sender: snapshot.data().userHandle,
                             type: 'comment',
                             read: false,
                             postId: doc.id
@@ -110,7 +110,7 @@ exports.onUserImageChange = functions.region('us-central1').firestore.document('
             const batch = db.batch();
             return db
                 .collection('posts')
-                .where('username', '==', change.before.data().username)
+                .where('userHandle', '==', change.before.data().username)
                 .get()
                 .then((data) => {
                     data.forEach((doc) => {

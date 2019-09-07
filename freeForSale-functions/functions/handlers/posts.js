@@ -14,7 +14,7 @@ exports.getAllPosts = (req, res) => {
                 posts.push({
                     postId: doc.id,
                     body: doc.data().body,
-                    username: doc.data().username,
+                    userHandle: doc.data().userHandle,
                     createdAt: doc.data().createdAt,
                     commentCount: doc.data().commentCount,
                     likeCount: doc.data().likeCount,
@@ -41,7 +41,7 @@ exports.postOne = (request, response) => {
     const newPost = {
         //body property of the body of the request
         body: request.body.body,
-        username: request.user.username,
+        userHandle: request.user.username,
         userImage: request.user.imageUrl,
         createdAt: new Date().toISOString(),
         likeCount: 0,
@@ -99,7 +99,7 @@ exports.commentOnPost = (req, res) => {
         body: req.body.body,
         createdAt: new Date().toISOString(),
         postId: req.params.postId,
-        username: req.user.username,
+        userHandle: req.user.username,
         userImage: req.user.imageUrl
     };
 
@@ -125,7 +125,7 @@ exports.commentOnPost = (req, res) => {
 //like a post
 exports.likePost = (req, res) => {
     const likeDoc = db.collection('likes')
-        .where('username', '==', req.user.username)
+        .where('userHandle', '==', req.user.username)
         .where('postId', '==', req.params.postId)
         .limit(1);
 
@@ -149,7 +149,7 @@ exports.likePost = (req, res) => {
                     .collection('likes')
                     .add({
                         postId: req.params.postId,
-                        username: req.user.username
+                        userHandle: req.user.username
                     })
                     .then(() => {
                         postData.likeCount++;
@@ -172,7 +172,7 @@ exports.likePost = (req, res) => {
 exports.unlikePost = (req, res) => {
     const likeDoc = db
         .collection('likes')
-        .where('username', '==', req.user.username)
+        .where('userHandle', '==', req.user.username)
         .where('postId', '==', req.params.postId)
         .limit(1);
 
@@ -221,7 +221,7 @@ exports.delPost = (req, res) => {
             if(!doc.exists){
                 return res.status(404).json({ error: 'Post not found '});
             }
-            if(doc.data().username !== req.user.username){
+            if(doc.data().userHandle !== req.user.username){
                 return res.status(403).json({ error: 'unauthorized'});
             } else {
                 return document.delete();
