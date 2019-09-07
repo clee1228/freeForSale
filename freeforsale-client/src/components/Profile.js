@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
 import dayjs from 'dayjs';
+import EditDetails from './EditDetails';
 
 // MUI stuff
 import Button from '@material-ui/core/Button';
@@ -45,6 +46,7 @@ class Profile extends Component {
         fileInput.click();
     };
 
+    //logout fn 
     handleLogout = () => { this.props.logout(); }
 
 
@@ -116,9 +118,10 @@ class Profile extends Component {
                     <Tooltip title="Logout" placement="top">
                         <IconButton onClick={this.handleLogout}>
                             <KeyboardReturn color="primary"/>
-
                         </IconButton>
                     </Tooltip>
+
+                    <EditDetails/>
 
 
 
