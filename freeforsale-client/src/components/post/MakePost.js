@@ -56,7 +56,7 @@ class MakePost extends Component{
     }
 
     handleOpen = () => {
-        this.setState({ open: true})
+        this.setState({ open: true })
     };
 
     handleClose = () => {

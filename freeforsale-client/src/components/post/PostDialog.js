@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import MyButton from '../../util/MyButton';
 import LikeButton from './LikeButton';
 import Comments from './Comments';
+import CommentForm from './CommentForm';
 
 // MUI
 import Dialog from '@material-ui/core/Dialog';
@@ -23,7 +24,7 @@ import ChatIcon from '@material-ui/icons/Chat';
 
 // Redux
 import { connect } from 'react-redux';
-import { getPost } from '../../redux/actions/dataActions';
+import { getPost, clearErrors } from '../../redux/actions/dataActions';
 
 const styles = (theme) => ({
     ...theme.spreadThis,
@@ -53,19 +54,44 @@ const styles = (theme) => ({
 
 class PostDialog extends Component{
     state = {
-        open: false
-    }
-    handleOpen = () => {
-        this.setState({ open: true });
-        this.props.getPost(this.props.postId);
-    }
-    handleClose = () => {
-        this.setState({ open: false });
+        open: false,
+        oldPath: '',
+        newPath: ''
+    };
+
+    componentDidMount() {
+        if(this.props.openDialog){
+            this.handleOpen();
+        }
     }
 
+
+    handleOpen = () => {
+        // this.setState({ open: true });
+        // this.props.getPost(this.props.postId);
+        let oldPath = window.location.pathname;
+
+        const { userHandle, postId } = this.props;
+        const newPath = `/users/${userHandle}/post/${postId}`;
+
+        if (oldPath === newPath) oldPath = `/users/${userHandle}`;
+
+        window.history.pushState(null, null, newPath);
+
+        this.setState({ open: true, oldPath, newPath });
+        this.props.getPost(this.props.postId);
+    };
+    
+    handleClose = () => {
+        window.history.pushState(null, null, this.state.oldPath);
+        this.setState({ open: false });
+        this.props.clearErrors();
+    };
+
     render(){
-        const { classes,
-             post: {  
+        const { 
+            classes,
+            post: {  
                 postId, 
                 body,
                 createdAt,
@@ -83,7 +109,7 @@ class PostDialog extends Component{
                 <CircularProgress size={200} thickness={2}/>
             </div>
         ) : (
-            <Grid container spacing={16}>
+            <Grid container spacing={3}>
                 <Grid item sm={5}>
                     <img src={userImage} alt="Profile" className={classes.profileImage}/>
                 </Grid>
@@ -96,7 +122,6 @@ class PostDialog extends Component{
                             @{userHandle}
                     </Typography>
                     <hr className={classes.invisibleSeparator}/>
-
 
                     <Typography
                         variant="body2"
@@ -117,10 +142,11 @@ class PostDialog extends Component{
                     <span> {commentCount} Comments</span>
                 </Grid>
                 <hr className={classes.visibleSeparator}/>
-                <Comments comments={comments}/>
-              
+
+                <CommentForm postId={postId} />
+                <Comments comments={comments} />
             </Grid>
-        )
+        );
         
 
         return(
@@ -130,27 +156,27 @@ class PostDialog extends Component{
                     tip="Expand post"
                     tipClassName={classes.expandButton}>
                         <UnfoldMore color="primary"/>
-                        <Dialog
-                            open={this.state.open}
-                            onClose={this.handleClose}
-                            fullWidth
-                            maxWidth="sm">
+                </MyButton>
+
+                <Dialog
+                    open={this.state.open}
+                    onClose={this.handleClose}
+                    fullWidth
+                    maxWidth="sm">
                         
-                        <MyButton 
-                            tip="Close" 
-                            onClick={this.handleClose}
-                            tipClassName={classes.closeButton}>
-                            <CloseIcon/>
-                            </MyButton>
-                        <DialogContent className={classes.dialogContent}>
-                            {dialogMarkup}
-
-                        </DialogContent>
-                        </Dialog>
+                    <MyButton 
+                        tip="Close" 
+                        onClick={this.handleClose}
+                        tipClassName={classes.closeButton}>
+                        <CloseIcon/>
                     </MyButton>
+
+                            
+                    <DialogContent className={classes.dialogContent}>
+                        {dialogMarkup}
+                    </DialogContent>
+                </Dialog>
             </Fragment>
-
-
         );
     }
   }
@@ -158,6 +184,7 @@ class PostDialog extends Component{
 
 
 PostDialog.propTypes = {
+    clearErrors: PropTypes.func.isRequired,
     getPost: PropTypes.func.isRequired,
     postId: PropTypes.string.isRequired,
     userHandle: PropTypes.string.isRequired,
@@ -172,7 +199,8 @@ const mapStateToProps = (state) => ({
 
 
 const mapActionsToProps = {
-    getPost
+    getPost,
+    clearErrors
 }
 
 export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(PostDialog));

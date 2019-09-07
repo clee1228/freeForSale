@@ -13,6 +13,7 @@ const styles = (theme) => ({
     commentImage: {
         maxWidth: '100%',
         height: 100,
+        marginLeft: 15,
         //in case ratio is not 1:1
         objectFit: 'cover',
         //round image
