@@ -150,7 +150,7 @@ class Profile extends Component {
                 </div>
             </Paper>
         )
-        ) : (<p> Uploading... </p>);
+        ) : (<p> Loading... </p>);
 
         return profileMarkup; 
     }

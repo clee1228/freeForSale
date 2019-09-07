@@ -2,7 +2,9 @@ import {
     SET_USER, 
     SET_AUTHENTICATED,
     SET_UNAUTHENTICATED,
-    LOADING_USER
+    LOADING_USER,
+    LIKE_POST,
+    UNLIKE_POST
 } from '../types';
 
 // Not the global state but what's stored 
@@ -40,6 +42,25 @@ export default function(state = initialState, action){
                 ...state,
                 loading: true
             };
+        case LIKE_POST:
+            return {
+                ...state,
+                likes: [
+                    ...state.likes,
+                    {
+                        username: state.creds.username,
+                        postId: action.payload.postId
+                    }
+                ]
+            }
+        case UNLIKE_POST:
+            return{
+                ...state,
+                likes: state.likes.filter(
+                    (like) => like.postId !== action.payload.postId
+                    )
+            };
+
         default:
             return state;
     }
