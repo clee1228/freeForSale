@@ -4,14 +4,13 @@ import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
 import dayjs from 'dayjs';
 import EditDetails from './EditDetails';
+import MyButton from '../util/MyButton';
 
 // MUI stuff
 import Button from '@material-ui/core/Button';
 import MUILink from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
-import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
 
 
 // Icons
@@ -72,15 +71,12 @@ class Profile extends Component {
                             id="imageInput"
                             hidden="hidden"
                             onChange={this.handleImageChange}/>
-                        <Tooltip 
-                            title="Edit profile picture" 
-                            placement="top">
-                                <IconButton 
-                                    onClick={this.handleEditPic} 
-                                    className="button">
+                        <MyButton 
+                            tip="Edit profile picture" 
+                            onClick={this.handleEditPic}
+                            btnClassName="button">
                                 <EditIcon color="primary"/>
-                            </IconButton>
-                            </Tooltip>
+                        </MyButton>
 
                     </div>
                     <hr/>
@@ -115,13 +111,15 @@ class Profile extends Component {
                     <CalendarToday color="primary"/> {' '}
                     <span>Joined {dayjs(createdAt).format('MMM YYYY')}</span>
                     </div>
-                    <Tooltip title="Logout" placement="top">
-                        <IconButton onClick={this.handleLogout}>
-                            <KeyboardReturn color="primary"/>
-                        </IconButton>
-                    </Tooltip>
 
-                    <EditDetails/>
+
+                    <MyButton 
+                        tip="Logout" 
+                        onClick={this.handleLogout}>
+                            <KeyboardReturn color="primary"/>
+                    </MyButton>
+
+                <EditDetails/>
 
 
 

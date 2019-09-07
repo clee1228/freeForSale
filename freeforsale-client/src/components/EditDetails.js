@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
+import MyButton from '../util/MyButton';
 
 // Redux
 import { connect } from 'react-redux';
@@ -13,8 +14,6 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Tooltip from '@material-ui/core/Tooltip';
-import IconButton from '@material-ui/core/IconButton';
 
 // Icons 
 import EditIcon from '@material-ui/icons/Edit';
@@ -75,11 +74,13 @@ class EditDetails extends Component {
         const { classes } = this.props;
         return (
             <Fragment> 
-                <Tooltip title="Edit details" placement="top">
-                    <IconButton onClick={this.handleOpen} className={classes.button}>
+                <MyButton 
+                    tip="Edit Details" 
+                    onClick={this.handleOpen}
+                    btnClassName={classes.button}>
                         <EditIcon color="primary"/>
-                    </IconButton>
-                </Tooltip>
+                </MyButton>
+                
                 <Dialog 
                     open={this.state.open}
                     onClose={this.handleClose}
