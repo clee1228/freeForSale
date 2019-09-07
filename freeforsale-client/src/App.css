@@ -16,6 +16,12 @@ body{
   margin: auto;
 }
 
+/* any svg (icons) in our nav bar */
+.nav-container svg{
+  color: #fff;
+
+}
+
 a{
   text-decoration: none;
 }

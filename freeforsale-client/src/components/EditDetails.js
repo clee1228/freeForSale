@@ -19,7 +19,12 @@ import IconButton from '@material-ui/core/IconButton';
 // Icons 
 import EditIcon from '@material-ui/icons/Edit';
 
-const styles = (theme) => ({...theme.spreadThis});
+const styles = (theme) => ({
+    ...theme.spreadThis,
+    button: {
+        float: 'right'
+    }
+});
 
 class EditDetails extends Component {
     state = {
