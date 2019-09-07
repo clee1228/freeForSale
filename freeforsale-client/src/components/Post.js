@@ -78,8 +78,6 @@ class Post extends Component {
             }
         } = this.props;
 
-        console.log('HANDLE', username);
-        console.log('aaaah', userHandle);
         const likeButton = !authenticated ? (
             <MyButton tip="Like">
                 <Link to="/login">
@@ -101,8 +99,6 @@ class Post extends Component {
                     <FavoriteBorder color="primary"/>
                 </MyButton> 
             )
-            
-
         )
 
         const deleteButton = authenticated && userHandle === username ? (
@@ -121,10 +117,10 @@ class Post extends Component {
                     <Typography 
                         variant="h5" 
                         component={Link} 
-                        to={`/users/${username}`}
+                        to={`/users/${userHandle}`}
                         color="primary"> 
                         
-                        {username}
+                        {userHandle}
                     </Typography>
 
 
