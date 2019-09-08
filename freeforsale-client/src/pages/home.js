@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types';
+
+
+// Components
 import Post from '../components/post/Post';
 import Profile from '../components/profile/Profile'; 
 
@@ -18,11 +21,11 @@ class home extends Component {
     render() {
         const { posts, loading } = this.props.data;
         let recentPostsMarkup = !loading ? (
-            posts.map((post) => 
-            <Post key={post.postId} post={post}/>)
+            posts.map((post) =>  <Post key={post.postId} post={post}/>)
         ) : ( 
         <p> Loading... </p>
-         );
+        );
+
         return (
             <Grid container spacing={10}>
                 {/*small screens will have width of 8 */}
@@ -33,7 +36,7 @@ class home extends Component {
                     <Profile/>
                 </Grid>
             </Grid>
-        )
+        );
     }
 }
 

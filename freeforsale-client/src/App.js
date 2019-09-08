@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './App.css';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
-import themeFile from './util/theme'; //same lvl
 import jwtDecode from 'jwt-decode';
 import axios from 'axios';
 
@@ -16,11 +15,13 @@ import { logout, getUserData } from  './redux/actions/userActions';
 // Components 
 import Navbar from './components/layout/Navbar';
 import AuthRoute from './util/AuthRoute';
+import themeFile from './util/theme'; //same lvl
 
 // Pages
 import home from './pages/home';
 import login from './pages/login';
 import signup from './pages/signup';
+import user from './pages/user';
 
 const theme = createMuiTheme(themeFile);
 
@@ -58,6 +59,9 @@ class App extends Component {
                 <AuthRoute 
                   exact path="/signup" 
                   component={signup} />
+                <Route 
+                  exact path="/user/:username"  
+                  component={user} />
               </Switch>
             </div> 
         </Router>

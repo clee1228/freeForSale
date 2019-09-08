@@ -74,7 +74,6 @@ class MakePost extends Component{
     handleSubmit = (event) => {
         event.preventDefault();
         this.props.createPost({ body: this.state.body });
-
     };
 
     render(){
@@ -97,10 +96,8 @@ class MakePost extends Component{
                                 onClick={this.handleClose}
                                 tipClassName={classes.closeButton}>
                                     <CloseIcon/>
-                                </MyButton>
-                                <DialogTitle>
-                                    Create a new post
-                                </DialogTitle>
+                            </MyButton>
+                            <DialogTitle> Create a new post </DialogTitle>
                                 <DialogContent>
                                     <form onSubmit={this.handleSubmit}>
                                         <TextField
@@ -132,7 +129,6 @@ class MakePost extends Component{
                                             </Button>
                                     </form>
                                 </DialogContent>
-
                     </Dialog>
             </Fragment>
         ) 

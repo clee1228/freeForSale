@@ -4,7 +4,8 @@ import withStyles from '@material-ui/core/styles/withStyles';
 
 // Redux
 import { connect } from 'react-redux';
-import { submitComment } from '../../redux/actions/dataActions';
+import { submitComment, clearErrors } from '../../redux/actions/dataActions';
+
 
 // MUI
 import Button from '@material-ui/core/Button';
@@ -76,6 +77,7 @@ class CommentForm extends Component {
 };
 
 CommentForm.propTypes = {
+    clearErrors: PropTypes.func.isRequired,
     submitComment: PropTypes.func.isRequired,
     UI: PropTypes.object.isRequired,
     classes: PropTypes.object.isRequired,
@@ -90,4 +92,4 @@ const mapStateToProps = (state) => ({
 
 
 
-export default connect(mapStateToProps, { submitComment })(withStyles(styles)(CommentForm));
+export default connect(mapStateToProps, { submitComment, clearErrors })(withStyles(styles)(CommentForm));

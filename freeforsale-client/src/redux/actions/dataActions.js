@@ -49,9 +49,6 @@ export const getPost = (postId) => (dispatch) => {
         .catch((err) => console.log(err));
 };
 
-
-
-
 // Create a post
 export const createPost = (newPost) => (dispatch) => {
     dispatch({ type: LOADING_UI });
@@ -132,6 +129,8 @@ export const deletePost = (postId) => (dispatch) => {
 };
 
 export const getUserData = (userHandle) => (dispatch) => {
+    console.log('data actions')
+    console.log('userHandle received = ', userHandle)
     dispatch({ type: LOADING_DATA });
     axios
       .get(`/user/${userHandle}`)

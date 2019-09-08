@@ -83,7 +83,7 @@ class Profile extends Component {
                     <div className="profile-details">
                         <MUILink 
                             component={Link} 
-                            to={`/users/${username}`} 
+                            to={`/user/${username}`} 
                             color="primary"
                             variant="h5"> 
                             @{username}

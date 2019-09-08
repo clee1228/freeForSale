@@ -64,17 +64,13 @@ class PostDialog extends Component{
             this.handleOpen();
         }
     }
-
-
+ 
     handleOpen = () => {
-        // this.setState({ open: true });
-        // this.props.getPost(this.props.postId);
         let oldPath = window.location.pathname;
-
         const { userHandle, postId } = this.props;
-        const newPath = `/users/${userHandle}/post/${postId}`;
+        const newPath = `/user/${userHandle}/post/${postId}`;
 
-        if (oldPath === newPath) oldPath = `/users/${userHandle}`;
+        if (oldPath === newPath) oldPath = `/user/${userHandle}`;
 
         window.history.pushState(null, null, newPath);
 
@@ -104,6 +100,8 @@ class PostDialog extends Component{
             UI: { loading }
         } = this.props;
 
+        console.log("POST DIALOG props = ", this.props)
+
         const dialogMarkup = loading ? (
             <div className={classes.spinnerDiv}>
                 <CircularProgress size={200} thickness={2}/>
@@ -118,7 +116,7 @@ class PostDialog extends Component{
                         component={ Link }
                         color="primary"
                         variant="h5"
-                        to={`/users/${userHandle}`}>
+                        to={`/user/${userHandle}`}>
                             @{userHandle}
                     </Typography>
                     <hr className={classes.invisibleSeparator}/>
@@ -170,8 +168,6 @@ class PostDialog extends Component{
                         tipClassName={classes.closeButton}>
                         <CloseIcon/>
                     </MyButton>
-
-                            
                     <DialogContent className={classes.dialogContent}>
                         {dialogMarkup}
                     </DialogContent>

@@ -59,12 +59,10 @@ class Post extends Component {
                 creds: { username }
             }
         } = this.props;
-        
 
         const deleteButton = authenticated && userHandle === username ? (
             <DeletePost postId={postId} />
         ) : null
-
 
         return (
             <Card className={classes.card}>
@@ -77,7 +75,7 @@ class Post extends Component {
                     <Typography 
                         variant="h5" 
                         component={Link} 
-                        to={`/users/${userHandle}`}
+                        to={`/user/${userHandle}`}
                         color="primary"> 
                         
                         {userHandle}
@@ -100,7 +98,6 @@ class Post extends Component {
                         <ChatIcon color="primary"/>
                     </MyButton>
                     <span> {commentCount} Comments</span>
-
                     <PostDialog 
                         postId={postId}
                         userHandle={userHandle}/>
