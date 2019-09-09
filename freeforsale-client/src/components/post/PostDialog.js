@@ -100,7 +100,7 @@ class PostDialog extends Component{
             UI: { loading }
         } = this.props;
 
-        console.log("POST DIALOG props = ", this.props)
+       
 
         const dialogMarkup = loading ? (
             <div className={classes.spinnerDiv}>

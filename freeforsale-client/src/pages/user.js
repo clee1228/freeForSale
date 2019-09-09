@@ -30,21 +30,24 @@ class user extends Component {
                 this.setState({
                     profile: res.data.user
                 });
-            console.log('profile = ', this.state.profile)
+
             })
             .catch((err) => console.log('error =', err));
     }
     render() {
         const { posts, loading } = this.props.data;
+        console.log('POSTsss = ', posts)
         const postsMarkup = loading ? (
             <p>Loading data...</p> 
         ) : posts === null ? (
             <p>No posts from this user</p>
         ) : (
+            
             posts.map((post) => <Post key={post.postId} post={post}/>)
         );
 
         return (
+            //Rendering profile on side
             <Grid container spacing={10}>
                 <Grid item sm={8} xs={12}>
                     {postsMarkup}
