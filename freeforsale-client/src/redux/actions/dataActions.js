@@ -133,7 +133,6 @@ export const getUserData = (userHandle) => (dispatch) => {
     axios
       .get(`/user/${userHandle}`)
       .then((res) => {
-        console.log('data action posts ', res.data.posts)
         dispatch({
           type: SET_POSTS,
           payload: res.data.posts

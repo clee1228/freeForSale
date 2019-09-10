@@ -4,7 +4,8 @@ import {
     SET_UNAUTHENTICATED,
     LOADING_USER,
     LIKE_POST,
-    UNLIKE_POST
+    UNLIKE_POST,
+    MARK_NOTIFICATIONS_READ
 } from '../types';
 
 // Not the global state but what's stored 
@@ -59,6 +60,11 @@ export default function(state = initialState, action){
                 likes: state.likes.filter(
                     (like) => like.postId !== action.payload.postId
                     )
+            };
+        case MARK_NOTIFICATIONS_READ:
+            state.notifications.forEach((notif) => notif.read = true);
+            return{
+                ...state
             };
 
         default:

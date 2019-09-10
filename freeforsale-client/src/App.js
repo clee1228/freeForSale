@@ -62,6 +62,9 @@ class App extends Component {
                 <Route 
                   exact path="/user/:username"  
                   component={user} />
+                <Route 
+                  exact path="/user/:username/post/:postId"  
+                  component={user} />
               </Switch>
             </div> 
         </Router>
