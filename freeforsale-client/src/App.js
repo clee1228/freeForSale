@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './App.css';
-import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
-import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
 import jwtDecode from 'jwt-decode';
 import axios from 'axios';
 
@@ -11,6 +9,10 @@ import { Provider } from 'react-redux';
 import store from './redux/store';
 import { SET_AUTHENTICATED } from './redux/types';
 import { logout, getUserData } from  './redux/actions/userActions';
+
+// MUI
+import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
+import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
 
 // Components 
 import Navbar from './components/layout/Navbar';
@@ -24,6 +26,8 @@ import signup from './pages/signup';
 import user from './pages/user';
 
 const theme = createMuiTheme(themeFile);
+
+axios.defaults.baseURL = 'https://us-central1-freeforsale-227d7.cloudfunctions.net/api';
 
 const token = localStorage.FBIdToken;
 if(token){
