@@ -1,16 +1,19 @@
 import React, { Component, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import withStyles from '@material-ui/core/styles/withStyles';
 import dayjs from 'dayjs';
+
+// Components
 import EditDetails from './EditDetails';
 import MyButton from '../../util/MyButton';
+import ProfileSkeleton from '../../util/ProfileSkeleton';
 
 // MUI stuff
 import Button from '@material-ui/core/Button';
 import MUILink from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
+import withStyles from '@material-ui/core/styles/withStyles';
 
 
 // Icons
@@ -150,7 +153,7 @@ class Profile extends Component {
                 </div>
             </Paper>
         )
-        ) : (<p> Loading... </p>);
+        ) : (<ProfileSkeleton/>);
 
         return profileMarkup; 
     }

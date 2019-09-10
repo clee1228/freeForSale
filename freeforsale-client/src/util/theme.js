@@ -1,4 +1,5 @@
 export default {
+  spreadThis:{
     palette: {
         primary: {
           light: '#6573c3',
@@ -13,7 +14,6 @@ export default {
           contrastText: '#fff'
           }
       },
-      spreadThis:{
         typography: {
           useNextVariants: true
         },
