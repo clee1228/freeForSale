@@ -14,6 +14,9 @@ export default {
           contrastText: '#fff'
           }
       },
+      zIndex:{
+        drawer: 1400,
+      },
         typography: {
           useNextVariants: true
         },

@@ -20,6 +20,7 @@ class home extends Component {
         this.props.getPosts();
     }
     render() {
+        
         const { posts, loading } = this.props.data;
         let recentPostsMarkup = !loading ? (
             posts.map((post) =>  <Post key={post.postId} post={post}/>)

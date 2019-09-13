@@ -7,19 +7,18 @@ body{
     }
   
 .container{
-  margin: 80px auto 0 auto;
-  max-width: 1200px;
+  margin: 90px auto 0 auto;
+  max-width: 1000px;
 }
 
 /*auto sets at middle middle*/
 .nav-container{
-  margin: auto;
+  margin: left;
 }
 
 /* any svg (icons) in our nav bar */
 .nav-container svg{
-  color: #fff;
-
+  color: #ABABAB;
 }
 
 a{
