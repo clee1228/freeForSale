@@ -15,6 +15,7 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 
 // Redux
 import { connect } from 'react-redux';
+import { logout } from '../../redux/actions/userActions';
 
 class ProfileNav extends Component{
     state = {
@@ -29,8 +30,18 @@ class ProfileNav extends Component{
         this.setState({ anchorEl: null });
     };
 
+    handleLogout = () => { this.props.logout(); }
+
     render(){
         const anchorEl = this.state.anchorEl;
+        const { classes,
+                user: { 
+                    creds: { username, createdAt, imageUrl, bio, website, location},
+                    authenticated
+                }} = this.props;
+
+
+
         return (
             <Fragment>
                 <Tooltip
@@ -61,13 +72,24 @@ class ProfileNav extends Component{
                     open={Boolean(anchorEl)}
                     onClose={this.handleClose}>
 
-                    <MenuItem onClick={this.handleClose}>Profile</MenuItem>
+                    <MenuItem onClick={this.handle}>Profile</MenuItem>
                     <MenuItem onClick={this.handleClose}>Settings</MenuItem>
-                    <MenuItem onClick={this.handleClose}>Log Out</MenuItem>
+                    <MenuItem onClick={this.handleLogout}>Log Out</MenuItem>
                 </Menu>
             </Fragment>
         )
     }
 }
 
-export default ProfileNav
+
+const mapStateToProps = (state) => ({
+    user: state.user
+});
+
+ProfileNav.propTypes = {
+    user: PropTypes.object.isRequired,
+    classes: PropTypes.object.isRequired,
+    logout: PropTypes.func.isRequired
+};
+
+export default connect(mapStateToProps, {logout})(ProfileNav);
