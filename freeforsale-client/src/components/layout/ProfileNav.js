@@ -22,15 +22,12 @@ class ProfileNav extends Component{
         anchorEl: null
     };
 
-    handleOpen = (event) => {
-        this.setState({ anchorEl: event.target });
-    }; 
-
     handleClose = () => {
         this.setState({ anchorEl: null });
     };
 
     handleLogout = () => { this.props.logout(); }
+    
 
     render(){
         const anchorEl = this.state.anchorEl;
@@ -39,7 +36,6 @@ class ProfileNav extends Component{
                     creds: { username, createdAt, imageUrl, bio, website, location},
                     authenticated
                 }} = this.props;
-
 
 
         return (
@@ -72,7 +68,13 @@ class ProfileNav extends Component{
                     open={Boolean(anchorEl)}
                     onClose={this.handleClose}>
 
-                    <MenuItem onClick={this.handle}>Profile</MenuItem>
+                    <MenuItem
+                    component={Link}
+                    to={`/user/${username}`}
+                    >
+                        Profile
+                    </MenuItem>
+
                     <MenuItem onClick={this.handleClose}>Settings</MenuItem>
                     <MenuItem onClick={this.handleLogout}>Log Out</MenuItem>
                 </Menu>
