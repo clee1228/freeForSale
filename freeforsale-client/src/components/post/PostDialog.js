@@ -19,7 +19,7 @@ import Typography from '@material-ui/core/Typography';
 
 // Icons
 import CloseIcon from '@material-ui/icons/Close';
-import UnfoldMore from '@material-ui/icons/UnfoldMore';
+import ExpandMore from '@material-ui/icons/ExpandMore';
 import ChatIcon from '@material-ui/icons/Chat';
 
 // Redux
@@ -154,7 +154,7 @@ class PostDialog extends Component{
                     onClick={this.handleOpen}
                     tip="Expand post"
                     tipClassName={classes.expandButton}>
-                        <UnfoldMore color="primary"/>
+                        <ExpandMore color="primary"/>
                 </MyButton>
 
                 <Dialog
