@@ -11,6 +11,7 @@ import ProfileSkeleton from '../util/ProfileSkeleton';
 
 // MUI 
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 
 // Redux
 import { connect } from 'react-redux';
@@ -63,6 +64,7 @@ class user extends Component {
             //Rendering profile on side
             <Grid container spacing={10}>
                 <Grid item sm={8} xs={12}>
+                    <Typography variant="h6">Your Posts</Typography>
                     {postsMarkup}
                 </Grid>
                 <Grid item sm={4} xs={12}>

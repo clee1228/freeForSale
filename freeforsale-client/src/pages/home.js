@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 // Components
 import Post from '../components/post/Post';
-import Profile from '../components/profile/Profile'; 
+import Filters from '../components/layout/Filters'; 
 import PostSkeleton from '../util/PostSkeleton';
 
 // MUI
@@ -14,8 +14,8 @@ import Grid from '@material-ui/core/Grid';
 import { connect } from 'react-redux';
 import { getPosts } from '../redux/actions/dataActions';
 
+
 class home extends Component {
-    
     componentDidMount(){ 
         this.props.getPosts();
     }
@@ -29,14 +29,19 @@ class home extends Component {
         );
 
         return (
-            <Grid container spacing={10}>
+            <Grid container spacing={6}>
                 {/*small screens will have width of 8 */}
                 <Grid item sm={8} xs={12}>
                     {recentPostsMarkup}
                 </Grid>
                 <Grid item sm={4} xs={12}>
-                    <Profile/>
-                </Grid>
+                    <Filters/>
+
+                    
+                        
+
+        
+              </Grid>
             </Grid>
         );
     }

@@ -25,14 +25,16 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import Tooltip from '@material-ui/core/Tooltip';
 
 
 // Icons
 import HomeIcon from '@material-ui/icons/Home';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
-import MailIcon from '@material-ui/icons/Mail';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
+import ChatIcon from '@material-ui/icons/Chat';
+import MarketIcon from '@material-ui/icons/Store';
+import SettingsIcon from '@material-ui/icons/Settings';
 
 // Redux
 import { connect } from 'react-redux';
@@ -75,9 +77,9 @@ const styles = (theme) => ({
     search: {
         position: 'relative',
         borderRadius: theme.shape.borderRadius,
-        backgroundColor: fade(theme.palette.common.white, 0.15),
+        backgroundColor: fade("#eeeeee", 0.15),
         '&:hover': {
-          backgroundColor: fade(theme.palette.common.white, 0.25),
+          backgroundColor: fade("#e0e0e0", 0.25),
         },
         marginRight: theme.spacing(2),
         marginLeft: 0,
@@ -119,8 +121,11 @@ const styles = (theme) => ({
           display: 'none',
         },
     },
+    chatIcon:{
+        width: 21,
+        height: 21,
+    },
 });
-
 
 
 export class Navbar extends Component {
@@ -145,21 +150,33 @@ export class Navbar extends Component {
           
             
               <List>
-                {['Home', 'Marketplace', 'Clothes', 'Furniture'].map((text, index) => (
-                <ListItem button key={text}>
-                    <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                    <ListItemText primary={text} />
+                {/* {['Home', 'Marketplace', 'Clothes', 'Furniture'].map((text, index) => ( */}
+                <ListItem alignItems="flex-start" button key="Home">
+                    {/* <ListItemIcon alignItems="flex-start"> <HomeIcon/> </ListItemIcon> */}
+                    <ListItemText primary="Home" />
                 </ListItem>
-                ))}
+                <ListItem button key="Marketplace">
+                    {/* <ListItemIcon><MarketIcon/> </ListItemIcon> */}
+                    <ListItemText primary="Marketplace" />
+                </ListItem>
+                <List>
+                    {['Clothes', 'Furniture', 'Textbooks', 'Miscellaneous'].map((text, index) => (
+                    <ListItem button key={text}>
+                        <ListItemText inset={true} secondary={text} />
+                    </ListItem>
+                    ))}
+                </List>    
             </List>
             <Divider />
             <List>
-                {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                <ListItem button key={text}>
-                    <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                    <ListItemText primary={text} />
+                <ListItem alignItems="flex-start" button key="Settings">
+                        {/* <ListItemIcon alignItems="flex-start"> <SettingsIcon/> </ListItemIcon> */}
+                        <ListItemText primary="Settings" />
                 </ListItem>
-                ))}
+                <ListItem button key="Log Out">
+                    {/* <ListItemIcon><LogOutIcon/> </ListItemIcon> */}
+                    <ListItemText primary="Log Out" />
+                </ListItem>
             </List>
             </div>
           );
@@ -208,11 +225,16 @@ export class Navbar extends Component {
                                     </MyButton>
                                 </Link>
 
-                                <IconButton aria-label="show 4 new mails" color="inherit">
-                                <Badge badgeContent={4} color="secondary">
-                                    <MailIcon />
-                                    </Badge>
-                                </IconButton>
+                                <Tooltip
+                                    placement="top"
+                                    title="Messages">
+
+                                    <IconButton color="inherit">
+                                        <Badge badgeContent={4} color="secondary">
+                                            <ChatIcon className={classes.chatIcon}/>
+                                        </Badge>
+                                    </IconButton>
+                                </Tooltip>
                                         
                                 <Notifications/>
                                 <ProfileNav />
