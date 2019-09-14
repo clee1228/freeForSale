@@ -222,11 +222,12 @@ exports.getUserDetails = (req, res) => {
 exports.getAuthenticatedUser = (req, res) => {
     //response data obj we'll add to
     let userData = {};
-    //get user
+    let userHandle;
     db.doc(`/users/${req.user.username}`)
         .get()
         .then((doc) => {
             if(doc.exists){
+                userHandle = doc.data().userHandle;
                 userData.creds = doc.data();
                 return db
                     .collection('likes')
@@ -240,7 +241,8 @@ exports.getAuthenticatedUser = (req, res) => {
                 userData.likes.push(doc.data());
             });
             return db.collection('notifications')
-                .where('recipient', '==', req.user.username)
+            //TODO: change username to userHandle
+                .where('recipient', '==', userHandle)
                 .orderBy('createdAt', 'desc')
                 .limit(10)
                 .get();
