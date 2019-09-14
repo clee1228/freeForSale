@@ -41,6 +41,7 @@ class MakePost extends Component{
     state = {
         open: false, //dialog
         body: '',
+        name: '',
         errors: {}
     };
 

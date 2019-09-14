@@ -55,6 +55,7 @@ export const createPost = (newPost) => (dispatch) => {
     axios
         .post('/post', newPost)
         .then((res) => {
+    
             dispatch({
                 type: CREATE_POST,
                 payload: res.data
@@ -128,10 +129,10 @@ export const deletePost = (postId) => (dispatch) => {
         .catch((err) => console.log(err));
 };
 
-export const getUserData = (userHandle) => (dispatch) => {
+export const getUserData = (username) => (dispatch) => {
     dispatch({ type: LOADING_DATA });
     axios
-      .get(`/user/${userHandle}`)
+      .get(`/user/${username}`)
       .then((res) => {
         dispatch({
           type: SET_POSTS,

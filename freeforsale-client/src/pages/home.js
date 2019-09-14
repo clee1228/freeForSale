@@ -36,11 +36,6 @@ class home extends Component {
                 </Grid>
                 <Grid item sm={4} xs={12}>
                     <Filters/>
-
-                    
-                        
-
-        
               </Grid>
             </Grid>
         );

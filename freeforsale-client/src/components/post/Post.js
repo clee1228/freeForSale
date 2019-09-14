@@ -102,7 +102,6 @@ class Post extends Component {
             <CardMedia
                     className={classes.media}
                     image={CouchPhoto}
-                    title="Paella dish"
                 />
              <CardContent>
                 <Typography variant="body2" component="p">{body}</Typography>

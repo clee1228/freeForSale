@@ -54,7 +54,7 @@ const ProfileSkeleton = (props) => {
                         <hr/>
                         <LocationOn color="primary"/>
                         <span> Location </span>
-                        <LinkIcon color="primary"/> https://website.Components
+                        <LinkIcon color="primary"/> https://website.com
                         <hr/>
                         <CalendarToday color="primary"/> Joined date
 

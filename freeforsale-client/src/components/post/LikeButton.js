@@ -13,7 +13,7 @@ import { likePost, unlikePost } from '../../redux/actions/dataActions';
 
 
 export class LikeButton extends Component {
-    //checks if user has liked a post or not
+    //check if user has liked a post or not
     likedPost = () => {
         if (
             this.props.user.likes && 
@@ -26,6 +26,8 @@ export class LikeButton extends Component {
     };
 
     likePost = () => {
+        // // { body: this.props.user.creds.name }
+        // console.log("user = ", this.props.user)
         this.props.likePost(this.props.postId);
     };
 
