@@ -38,27 +38,48 @@ exports.postOne = (request, response) => {
         return response.status(400).json({ body: 'Body must not be empty' });
     }
 
-    const newPost = {
+    const requestedPost = {
         //body property of the body of the request
         body: request.body.body,
         userHandle: request.user.username,
         userImage: request.user.imageUrl,
-        createdAt: new Date().toISOString(),
-        likeCount: 0,
-        commentCount: 0 
-    };
+    }
 
-    db.collection('posts')
-        .add(newPost)
+
+    db.doc(`/users/${requestedPost.userHandle}`)
+        .get()
         .then((doc) => {
-            const resPost = newPost;
-            resPost.postId = doc.id;
-            response.json(resPost);
-        })  
-        .catch((err) => {
-            response.status(500).json({ error: 'something went wrong '});
-            console.error(err);
-        });
+            if(doc.exists){
+                return doc.data().name;
+            } else {
+                return res.status(404).json({ error: 'User not found'});
+            }
+        })
+        .then((name) => {
+            const newPost = {
+                //body property of the body of the request
+                body: requestedPost.body,
+                userHandle: name,
+                userImage: requestedPost.userImage,
+                createdAt: new Date().toISOString(),
+                likeCount: 0,
+                commentCount: 0 
+            }
+
+            console.error("new post = ", newPost)
+
+            db.collection('posts')
+            .add(newPost)
+            .then((doc) => {
+                const resPost = newPost;
+                resPost.postId = doc.id;
+                response.json(resPost);
+            })  
+            .catch((err) => {
+                response.status(500).json({ error: 'something went wrong '});
+                console.error(err);
+            })
+        })
 };
 
 //fetch post by postID
@@ -99,7 +120,7 @@ exports.commentOnPost = (req, res) => {
         body: req.body.body,
         createdAt: new Date().toISOString(),
         postId: req.params.postId,
-        userHandle: req.user.username,
+        userHandle: req.user.name,
         userImage: req.user.imageUrl
     };
 
@@ -125,7 +146,7 @@ exports.commentOnPost = (req, res) => {
 //like a post
 exports.likePost = (req, res) => {
     const likeDoc = db.collection('likes')
-        .where('userHandle', '==', req.user.username)
+        .where('userHandle', '==', req.user.name)
         .where('postId', '==', req.params.postId)
         .limit(1);
 
@@ -149,7 +170,7 @@ exports.likePost = (req, res) => {
                     .collection('likes')
                     .add({
                         postId: req.params.postId,
-                        userHandle: req.user.username
+                        userHandle: req.user.name
                     })
                     .then(() => {
                         postData.likeCount++;
@@ -172,7 +193,7 @@ exports.likePost = (req, res) => {
 exports.unlikePost = (req, res) => {
     const likeDoc = db
         .collection('likes')
-        .where('userHandle', '==', req.user.username)
+        .where('userHandle', '==', req.user.name)
         .where('postId', '==', req.params.postId)
         .limit(1);
 
@@ -221,7 +242,7 @@ exports.delPost = (req, res) => {
             if(!doc.exists){
                 return res.status(404).json({ error: 'Post not found '});
             }
-            if(doc.data().userHandle !== req.user.username){
+            if(doc.data().userHandle !== req.user.name){
                 return res.status(403).json({ error: 'unauthorized'});
             } else {
                 return document.delete();
