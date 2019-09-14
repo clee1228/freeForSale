@@ -46,7 +46,7 @@ exports.signup = (req, res) => {
             token = idToken;
             const userCreds = {
                 username: usernameFromEmail,
-                name: newUser.name,
+                userHandle: newUser.name,
                 email: newUser.email,
                 createdAt: new Date().toISOString(),
                 imageUrl: `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${noImg}?alt=media`,
@@ -97,7 +97,7 @@ exports.signupGoogleUser = (req, res) => {
                         fbToken = idToken;
                         const userCreds = {
                             username: newUser.username,
-                            name: newUser.name,
+                            userHandle: newUser.name,
                             email: newUser.email,
                             createdAt: new Date().toISOString(),
                             imageUrl: newUser.photoURL,

@@ -117,7 +117,7 @@ exports.onUserImageChange = functions.region('us-central1').firestore.document('
             const batch = db.batch();
             return db
                 .collection('posts')
-                .where('userHandle', '==', change.before.data().username)
+                .where('username', '==', change.before.data().username)
                 .get()
                 .then((data) => {
                     data.forEach((doc) => {
