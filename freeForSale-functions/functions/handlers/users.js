@@ -187,7 +187,7 @@ exports.getUserDetails = (req, res) => {
                 userData.user = doc.data();
                 return db
                     .collection('posts')
-                    .where('userHandle', '==', req.params.username)
+                    .where('username', '==', req.params.username)
                     .orderBy('createdAt', 'desc')
                     .get();
             } else {
@@ -196,11 +196,14 @@ exports.getUserDetails = (req, res) => {
         })
         .then((data) => {
             userData.posts = [];
+            console.error('data = ', data)
             data.forEach((doc) => {
+                console.error('doc = ', doc)
                 userData.posts.push({
                     body: doc.data().body,
                     createdAt: doc.data().createdAt,
                     userHandle: doc.data().userHandle,
+                    username: doc.data().username,
                     userImage: doc.data().userImage,
                     likeCount: doc.data().likeCount,
                     commentCount: doc.data().commentCount,
@@ -227,7 +230,7 @@ exports.getAuthenticatedUser = (req, res) => {
                 userData.creds = doc.data();
                 return db
                     .collection('likes')
-                    .where('userHandle', '==', req.user.username)
+                    .where('username', '==', req.user.username)
                     .get();
             }
         })

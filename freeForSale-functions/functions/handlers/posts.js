@@ -1,7 +1,6 @@
 const { db } = require('../util/admin');
 
 
-
 //first parameter = name of the route, second = the handler
 exports.getAllPosts = (req, res) => {
     db.collection('posts')
@@ -119,11 +118,22 @@ exports.commentOnPost = (req, res) => {
 
     const newComment = {
         body: req.body.body,
-        createdAt: new Date().toISOString(),
         postId: req.params.postId,
-        userHandle: req.user.name,
-        userImage: req.user.imageUrl
+        username: req.user.username,
+        userHandle: "",
+        userImage: req.user.imageUrl,
+        createdAt: new Date().toISOString(),
     };
+
+    db.doc(`/users/${req.user.username}`)
+        .get()
+        .then((doc) => {
+            return doc.data().userHandle;
+        })
+        .then((name) => {
+            newComment.userHandle = name;
+        });
+
 
     db.doc(`/posts/${req.params.postId}`).get()
         .then((doc) => {
@@ -148,7 +158,7 @@ exports.commentOnPost = (req, res) => {
 exports.likePost = (req, res) => {
 
     const likeDoc = db.collection('likes')
-        .where('userHandle', '==', req.user.username)
+        .where('username', '==', req.user.username)
         .where('postId', '==', req.params.postId)
         .limit(1);
 
@@ -170,7 +180,7 @@ exports.likePost = (req, res) => {
                 db.doc(`/users/${req.user.username}`)
                 .get()
                 .then((doc) => {
-                    return doc.data().name;
+                    return doc.data().userHandle;
                 })
                 .then((name) => {
                     return db
@@ -202,7 +212,7 @@ exports.likePost = (req, res) => {
 exports.unlikePost = (req, res) => {
     const likeDoc = db
         .collection('likes')
-        .where('userHandle', '==', req.user.username)
+        .where('username', '==', req.user.username)
         .where('postId', '==', req.params.postId)
         .limit(1);
 
@@ -251,7 +261,7 @@ exports.delPost = (req, res) => {
             if(!doc.exists){
                 return res.status(404).json({ error: 'Post not found '});
             }
-            if(doc.data().userHandle !== req.user.name){
+            if(doc.data().username !== req.user.username){
                 return res.status(403).json({ error: 'unauthorized'});
             } else {
                 return document.delete();
@@ -265,9 +275,6 @@ exports.delPost = (req, res) => {
             return res.statu(500).json({ error: err.code });
         });
 };
-
-
-
 
 
 
