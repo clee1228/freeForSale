@@ -3,6 +3,10 @@ const app = require('express')();
 const FBAuth = require('./util/fbAuth');
 const { db } = require('./util/admin');
 
+//Cross-Origin Resource Sharing
+const cors = require('cors');
+app.use(cors());
+
 const { 
     getAllPosts, 
     postOne, 
@@ -14,7 +18,9 @@ const {
 } = require('./handlers/posts');
 const { 
     signup, 
+    signupGoogleUser,
     login, 
+    loginGoogleUser,
     uploadPhoto, 
     addUserDetails, 
     getAuthenticatedUser,
@@ -34,6 +40,8 @@ app.post('/post/:postId/comment', FBAuth, commentOnPost);
 //User Routes
 app.post('/signup', signup);
 app.post('/login', login);
+app.post('/loginGoogleUser', loginGoogleUser);
+app.post('/signupGoogleUser', signupGoogleUser)
 app.post('/user/image', FBAuth, uploadPhoto);
 app.post('/user', FBAuth, addUserDetails);
 app.get('/user', FBAuth, getAuthenticatedUser);

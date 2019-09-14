@@ -18,7 +18,10 @@ exports.validateSignupData = (data) => {
         errors.email = 'Must not be empty';
     } else if(!isEmail(data.email)){
         errors.email = 'Must be a valid email address';
+    } else if(data.email.split("@")[1] !== 'berkeley.edu'){
+        errors.email = 'Must be a Berkeley e-mail (@berkeley.edu)';
     }
+
 
     if(isEmpty(data.password)) errors.password = 'Must not be empty';
     if(data.password !== data.confirmPw) errors.confirmPw = 'Passwords must match';

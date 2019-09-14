@@ -3,7 +3,13 @@ const config = require('../util/config');
 const firebase = require('firebase');
 firebase.initializeApp(config);
 
-const { validateSignupData, validateLoginData, reduceUserDetails } = require('../util/validate');
+
+const { 
+    validateSignupData, 
+    validateLoginData, 
+    reduceUserDetails 
+} = require('../util/validate');
+
 
 /*** USER SIGN UP ***/
 exports.signup = (req, res) => {
@@ -15,7 +21,6 @@ exports.signup = (req, res) => {
     };
 
     const { valid, errors } = validateSignupData(newUser);
-
     if (!valid) return res.status(400).json(errors);
 
     const noImg = 'no-img.png';
@@ -25,7 +30,7 @@ exports.signup = (req, res) => {
         .get()
         .then((doc) => {
             if(doc.exists){
-                return res.status(400).json({ username: 'this username is already taken'});
+                return res.status(400).json({ username: 'This username is already taken'});
             } else {
                 return firebase
                     .auth()
@@ -61,6 +66,71 @@ exports.signup = (req, res) => {
             }
         });
 };
+
+exports.signupGoogleUser = (req, res) => {
+    const newUser = {
+        email: req.body.email,  
+        username: req.body.username, 
+        photoURL: req.body.photoURL,
+        token: req.body.idToken,
+    };
+
+    let fbToken, userId
+    db.doc(`/users/${newUser.email}`)
+        .get()
+        .then((doc) => {
+            if(doc.exists){
+                return res.status(400).json({ username: 'This account already exists'});
+            } else {
+                var credential = firebase.auth.GoogleAuthProvider.credential(newUser.token);
+                firebase
+                    .auth()
+                    .signInWithCredential(credential)
+                    .then((data) => {
+                        userId = data.user.uid;
+                        return data.user.getIdToken();
+                    })
+                    .then((idToken) => {
+                        fbToken = idToken;
+                        const userCreds = {
+                            username: newUser.username,
+                            email: newUser.email,
+                            createdAt: new Date().toISOString(),
+                            imageUrl: newUser.photoURL,
+                            userId
+                        }
+                        return db.doc(`/users/${newUser.email}`).set(userCreds);
+                    })
+                    .then(() => {
+                        return res.status(201).json({ fbToken });
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                    });
+            }
+        })
+    };
+    
+
+exports.loginGoogleUser = (req, res) => {
+    const googleToken = {
+        idToken: req.body.idToken
+    };
+    var credential = firebase.auth.GoogleAuthProvider.credential(googleToken.idToken);
+    firebase
+        .auth()
+        .signInWithCredential(credential)
+        .then((data) => {
+            return data.user.getIdToken();
+        })
+        .then((token) => {
+            return res.json({token});
+        })
+        .catch((err) => {
+            console.error(err);
+        });
+};
+
 
 /*** USER LOGIN  ***/
 exports.login = (req, res) => {
@@ -111,7 +181,8 @@ exports.getUserDetails = (req, res) => {
         .then((doc) => {
             if(doc.exists){
                 userData.user = doc.data();
-                return db.collection('posts')
+                return db
+                    .collection('posts')
                     .where('userHandle', '==', req.params.username)
                     .orderBy('createdAt', 'desc')
                     .get();
@@ -125,7 +196,7 @@ exports.getUserDetails = (req, res) => {
                 userData.posts.push({
                     body: doc.data().body,
                     createdAt: doc.data().createdAt,
-                    userHandle: doc.data().username,
+                    userHandle: doc.data().userHandle,
                     userImage: doc.data().userImage,
                     likeCount: doc.data().likeCount,
                     commentCount: doc.data().commentCount,
@@ -145,7 +216,7 @@ exports.getAuthenticatedUser = (req, res) => {
     //response data obj we'll add to
     let userData = {};
     //get user
-    db.doc(`/users/${req.user.username}`)
+    db.doc(`/users/${req.user.email}`)
         .get()
         .then((doc) => {
             if(doc.exists){
