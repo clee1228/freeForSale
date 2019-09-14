@@ -15,9 +15,9 @@ const {
 exports.signup = (req, res) => {
     const newUser = {
         email: req.body.email, 
+        name: req.body.name,
         password: req.body.password, 
         confirmPw: req.body.confirmPw, 
-        username: req.body.username, 
     };
 
     const { valid, errors } = validateSignupData(newUser);
@@ -25,12 +25,13 @@ exports.signup = (req, res) => {
 
     const noImg = 'no-img.png';
 
-    let token, userId;
-    db.doc(`/users/${newUser.username}`)
+    let token, userId, usernameFromEmail;
+    usernameFromEmail = newUser.email.split('@')[0];
+    db.doc(`/users/${usernameFromEmail}`)
         .get()
         .then((doc) => {
             if(doc.exists){
-                return res.status(400).json({ username: 'This username is already taken'});
+                return res.status(400).json({ email: 'This account already exists'});
             } else {
                 return firebase
                     .auth()
@@ -44,13 +45,14 @@ exports.signup = (req, res) => {
         .then((idToken) => {
             token = idToken;
             const userCreds = {
-                username: newUser.username,
+                username: usernameFromEmail,
+                name: newUser.name,
                 email: newUser.email,
                 createdAt: new Date().toISOString(),
                 imageUrl: `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${noImg}?alt=media`,
                 userId
             };
-            return db.doc(`/users/${newUser.username}`).set(userCreds);
+            return db.doc(`/users/${usernameFromEmail}`).set(userCreds);
         })
         .then(() => {
             return res.status(201).json({ token });
@@ -71,12 +73,13 @@ exports.signupGoogleUser = (req, res) => {
     const newUser = {
         email: req.body.email,  
         username: req.body.username, 
+        name: req.body.name,
         photoURL: req.body.photoURL,
         token: req.body.idToken,
     };
 
     let fbToken, userId
-    db.doc(`/users/${newUser.email}`)
+    db.doc(`/users/${newUser.username}`)
         .get()
         .then((doc) => {
             if(doc.exists){
@@ -94,12 +97,13 @@ exports.signupGoogleUser = (req, res) => {
                         fbToken = idToken;
                         const userCreds = {
                             username: newUser.username,
+                            name: newUser.name,
                             email: newUser.email,
                             createdAt: new Date().toISOString(),
                             imageUrl: newUser.photoURL,
                             userId
                         }
-                        return db.doc(`/users/${newUser.email}`).set(userCreds);
+                        return db.doc(`/users/${newUser.username}`).set(userCreds);
                     })
                     .then(() => {
                         return res.status(201).json({ fbToken });
@@ -216,7 +220,7 @@ exports.getAuthenticatedUser = (req, res) => {
     //response data obj we'll add to
     let userData = {};
     //get user
-    db.doc(`/users/${req.user.email}`)
+    db.doc(`/users/${req.user.username}`)
         .get()
         .then((doc) => {
             if(doc.exists){
