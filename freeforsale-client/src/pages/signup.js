@@ -46,7 +46,7 @@ export class signup extends Component {
             email: this.state.email,
             password: this.state.password,
             confirmPw: this.state.confirmPw,
-            username: this.state.username
+            username: this.state.username,
         };
         this.props.signupUser(newUserData, this.props.history);
     };

@@ -145,10 +145,7 @@ export class Navbar extends Component {
         const drawer = (
             <div>
              
-            
             <div className={classes.toolbar} />
-          
-            
               <List>
                 {/* {['Home', 'Marketplace', 'Clothes', 'Furniture'].map((text, index) => ( */}
                 <ListItem alignItems="flex-start" button key="Home">
@@ -242,8 +239,8 @@ export class Navbar extends Component {
                         </Fragment>
                     ) : (
                         <Fragment>
-                            <Button color="inherit" component={Link} to="/login">Login</Button>
                             <Button color="inherit" component={Link} to="/">Home</Button>
+                            <Button color="inherit" component={Link} to="/login">Login</Button>
                             <Button color="inherit" component={Link} to="/signup">Signup</Button>
                         </Fragment>
                     )}

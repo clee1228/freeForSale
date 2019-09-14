@@ -21,7 +21,9 @@ export default {
           useNextVariants: true
         },
         form: {
-          textAlign: 'center'
+          textAlign: 'center',
+          height: 600
+
         },
         image: {
           //top, right, bottom, left
@@ -35,6 +37,8 @@ export default {
         },
         button: {
           marginTop: 20,
+          marginBottom:20,
+          width: 500,
           //so we can position spinner absolute (in the center)
           position: 'relative'
         },
