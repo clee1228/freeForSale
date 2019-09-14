@@ -42,16 +42,16 @@ exports.postOne = (request, response) => {
 
     const requestedPost = {
         body: request.body.body,
-        userHandle: request.user.username,
+        username: request.user.username,
         userImage: request.user.imageUrl,
     }
 
 
-    db.doc(`/users/${requestedPost.userHandle}`)
+    db.doc(`/users/${requestedPost.username}`)
         .get()
         .then((doc) => {
             if(doc.exists){
-                return doc.data().name;
+                return doc.data().userHandle;
             } else {
                 return res.status(404).json({ error: 'User not found'});
             }
@@ -61,7 +61,7 @@ exports.postOne = (request, response) => {
                 body: requestedPost.body,
                 userHandle: name,
                 userImage: requestedPost.userImage,
-                username: requestedPost.userHandle,
+                username: requestedPost.username,
                 createdAt: new Date().toISOString(),
                 likeCount: 0,
                 commentCount: 0 
