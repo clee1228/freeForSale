@@ -1,6 +1,7 @@
 const { db } = require('../util/admin');
 
 
+
 //first parameter = name of the route, second = the handler
 exports.getAllPosts = (req, res) => {
     db.collection('posts')
@@ -15,6 +16,7 @@ exports.getAllPosts = (req, res) => {
                     postId: doc.id,
                     body: doc.data().body,
                     userHandle: doc.data().userHandle,
+                    username: doc.data().username,
                     createdAt: doc.data().createdAt,
                     commentCount: doc.data().commentCount,
                     likeCount: doc.data().likeCount,
@@ -39,7 +41,6 @@ exports.postOne = (request, response) => {
     }
 
     const requestedPost = {
-        //body property of the body of the request
         body: request.body.body,
         userHandle: request.user.username,
         userImage: request.user.imageUrl,
@@ -57,10 +58,10 @@ exports.postOne = (request, response) => {
         })
         .then((name) => {
             const newPost = {
-                //body property of the body of the request
                 body: requestedPost.body,
                 userHandle: name,
                 userImage: requestedPost.userImage,
+                username: requestedPost.userHandle,
                 createdAt: new Date().toISOString(),
                 likeCount: 0,
                 commentCount: 0 
@@ -145,13 +146,13 @@ exports.commentOnPost = (req, res) => {
 
 //like a post
 exports.likePost = (req, res) => {
+
     const likeDoc = db.collection('likes')
-        .where('userHandle', '==', req.user.name)
+        .where('userHandle', '==', req.user.username)
         .where('postId', '==', req.params.postId)
         .limit(1);
 
     const postDoc = db.doc(`/posts/${req.params.postId}`);
-
     let postData;
     postDoc
         .get()
@@ -166,11 +167,18 @@ exports.likePost = (req, res) => {
         })
         .then((data) => {
             if(data.empty){
-                return db
+                db.doc(`/users/${req.user.username}`)
+                .get()
+                .then((doc) => {
+                    return doc.data().name;
+                })
+                .then((name) => {
+                    return db
                     .collection('likes')
                     .add({
                         postId: req.params.postId,
-                        userHandle: req.user.name
+                        username: req.user.username,
+                        userHandle: name
                     })
                     .then(() => {
                         postData.likeCount++;
@@ -179,6 +187,7 @@ exports.likePost = (req, res) => {
                     .then(() => {
                         return res.json(postData);
                     })
+                }); 
             } else {
                 return res.status(400).json({ error: 'Post already liked'});
             }
@@ -193,7 +202,7 @@ exports.likePost = (req, res) => {
 exports.unlikePost = (req, res) => {
     const likeDoc = db
         .collection('likes')
-        .where('userHandle', '==', req.user.name)
+        .where('userHandle', '==', req.user.username)
         .where('postId', '==', req.params.postId)
         .limit(1);
 
