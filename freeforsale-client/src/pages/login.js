@@ -131,7 +131,9 @@ export class login extends Component {
                     };
                     this.props.googleSignup(newGoogleUserData, this.props.history)
                 } else if (!newUser && verified) {
-                    const googleToken = res.credential.accessToken
+                    const googleToken = {
+                        idToken: res.credential.idToken
+                    }
                     this.props.googleLogin(googleToken, this.props.history)
                 }
             })

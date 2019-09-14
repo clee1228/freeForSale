@@ -36,15 +36,16 @@ export const googleLogin = (token, history) => (dispatch) => {
         .post('/loginGoogleUser', token)
         .then((res) => {
             setAuthHeader(res.data.token);
-            dispatch({type: CLEAR_ERRORS});
+            dispatch(getUserData());
+            dispatch({ type: CLEAR_ERRORS });
             history.push('/');
         })
         .catch((err) => {
             console.log(err)
-            dispatch({ 
-                type: SET_ERRORS,
-                payload: err.response.data
-            })
+            // dispatch({ 
+            //     type: SET_ERRORS,
+            //     payload: err.response.data
+            // })
         });
 };
 
