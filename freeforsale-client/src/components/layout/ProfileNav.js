@@ -21,6 +21,10 @@ class ProfileNav extends Component{
         anchorEl: null
     };
 
+    handleOpen = (event) => {
+        this.setState({ anchorEl: event.target });
+    }; 
+
     handleClose = () => {
         this.setState({ anchorEl: null });
     };

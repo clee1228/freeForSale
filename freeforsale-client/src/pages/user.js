@@ -5,6 +5,7 @@ import axios from 'axios';
 // Components
 import Post from '../components/post/Post';
 import StaticProfile from '../components/profile/StaticProfile';
+import Profile from '../components/profile/Profile';
 import PostSkeleton from '../util/PostSkeleton';
 import ProfileSkeleton from '../util/ProfileSkeleton';
 
@@ -28,7 +29,7 @@ class user extends Component {
         const username = this.props.match.params.username;
         const postId = this.props.match.params.postId;
 
-        if(postId) this.setState({ postIdParam: postId});
+        if (postId) this.setState({ postIdParam: postId});
 
 
         this.props.getUserData(username);
@@ -71,7 +72,8 @@ class user extends Component {
                     {this.state.profile === null ? (
                         <ProfileSkeleton/>
                     ) : (
-                        <StaticProfile profile={this.state.profile}/>
+                        <Profile/>
+                        // <StaticProfile profile={this.state.profile}/>
                     )}
                 </Grid>
             </Grid>

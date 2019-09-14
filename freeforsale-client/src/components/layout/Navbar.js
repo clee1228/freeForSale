@@ -138,8 +138,9 @@ export class Navbar extends Component {
         this.setState({ mobileOpen: !this.state.mobileOpen })
     };
 
+
     render() {
-        const { classes, authenticated } = this.props;
+        const { classes, authenticated} = this.props;
         const { mobileOpen } = this.state;
 
         const drawer = (
@@ -148,8 +149,7 @@ export class Navbar extends Component {
             <div className={classes.toolbar} />
               <List>
                 {/* {['Home', 'Marketplace', 'Clothes', 'Furniture'].map((text, index) => ( */}
-                <ListItem alignItems="flex-start" button key="Home">
-                    {/* <ListItemIcon alignItems="flex-start"> <HomeIcon/> </ListItemIcon> */}
+                <ListItem button component={Link} to="/" alignItems="flex-start" button key="Home">
                     <ListItemText primary="Home" />
                 </ListItem>
                 <ListItem button key="Marketplace">
@@ -165,16 +165,7 @@ export class Navbar extends Component {
                 </List>    
             </List>
             <Divider />
-            <List>
-                <ListItem alignItems="flex-start" button key="Settings">
-                        {/* <ListItemIcon alignItems="flex-start"> <SettingsIcon/> </ListItemIcon> */}
-                        <ListItemText primary="Settings" />
-                </ListItem>
-                <ListItem button key="Log Out">
-                    {/* <ListItemIcon><LogOutIcon/> </ListItemIcon> */}
-                    <ListItemText primary="Log Out" />
-                </ListItem>
-            </List>
+            
             </div>
           );
 
@@ -286,7 +277,7 @@ export class Navbar extends Component {
 }
 
 Navbar.propTypes = {
-    authenticated: PropTypes.bool.isRequired
+    authenticated: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = (state) => ({

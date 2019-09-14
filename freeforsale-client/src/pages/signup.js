@@ -23,9 +23,9 @@ export class signup extends Component {
         super();
         this.state = {
             email: '',
+            name: '',
             password: '',
             confirmPw: '',
-            username: '',
             errors: {}
         };
     }
@@ -43,10 +43,10 @@ export class signup extends Component {
             loading: true
         });
         const newUserData = {
+            name: this.state.name,
             email: this.state.email,
             password: this.state.password,
-            confirmPw: this.state.confirmPw,
-            username: this.state.username,
+            confirmPw: this.state.confirmPw
         };
         this.props.signupUser(newUserData, this.props.history);
     };
@@ -70,6 +70,18 @@ export class signup extends Component {
                         Signup
                     </Typography>
                     <form noValidate onSubmit={this.handleSubmit}>
+                        
+                        <TextField 
+                                id="name" 
+                                name="name" 
+                                type="name" 
+                                label="Full Name" 
+                                className={classes.textField}
+                                // helperText={errors.name}
+                                // error={errors.name ? true : false}
+                                value={this.state.name} 
+                                onChange={this.handleChange} 
+                                fullWidth/>
                         <TextField 
                             id="email" 
                             name="email" 
@@ -103,17 +115,7 @@ export class signup extends Component {
                             value={this.state.confirmPw} 
                             onChange={this.handleChange} 
                             fullWidth/>
-                        <TextField 
-                            id="username" 
-                            name="username" 
-                            type="text" 
-                            label="Username" 
-                            className={classes.textField}
-                            helperText={errors.username}
-                            error={errors.username ? true : false}
-                            value={this.state.username} 
-                            onChange={this.handleChange} 
-                            fullWidth/>    
+                          
                         {errors.general && (
                             <Typography variant="body2" className={classes.customError}>
                                 {errors.general}

@@ -62,52 +62,6 @@ export class login extends Component {
         this.props.loginUser(userData, this.props.history);
     };
 
-    // onSignIn = (googleUser) => {
-    //     console.log('usergoog = ' ,googleUser)
-        
-
-    //     var newUser = googleUser.additionalUserInfo.isNewUser
-    //     var verified = googleUser.additionalUserInfo.profile.verified_email
-
-    //     var newGoogleUserData = {
-    //         email: googleUser.additionalUserInfo.profile.email,
-    //         username: googleUser.additionalUserInfo.profile.name,
-    //         photo: googleUser.additionalUserInfo.profile.picture,
-    //         token: "",
-    //         userId: "",
-    //     };
-      
-        // var unsubscribe = firebase
-        //                         .auth()
-        //                         .onAuthStateChanged(function(firebaseUser) { 
-        //                             unsubscribe();
-        //                             var credential = firebase
-        //                                             .auth
-        //                                             .GoogleAuthProvider
-        //                                             .credential(null, googleUser.credential.accessToken);
-        //                             firebase
-        //                                 .auth()
-        //                                 .signInWithCredential(credential)
-        //                                 .then((data) =>{
-        //                                     newGoogleUserData.userId = data.user.uid;
-        //                                     console.log('userID = ', newGoogleUserData.userId)
-        //                                     newGoogleUserData.token = data.user.getIdToken();
-        //                                     console.log('getToken = ', newGoogleUserData.token)
-        //                                 })
-        //                                 .then(() => {
-        //                                     if (newUser && verified) {
-        //                                         console.log('googledata =',newGoogleUserData)
-        //                                         this.props.googleSignup(newGoogleUserData, this.props.history)
-        //                                     } else if (!newUser && verified) {
-        //                                         this.props.googleLogin(newGoogleUserData.token, this.props.history)
-        //                                     }
-        //                                 })
-        //                                 .catch(function(error) {
-        //                                     console.log(error)
-        //                                 })
-        //                         })
-    //  }
-
 
     googleLogin = () =>{
         var provider = new firebase.auth.GoogleAuthProvider();
@@ -125,7 +79,8 @@ export class login extends Component {
                 if (newUser && verified) {
                     const newGoogleUserData = {
                         email: user.email,
-                        username: user.displayName,
+                        username: user.email.split("@")[0],
+                        name: user.displayName,
                         photoURL: user.photoURL,
                         idToken: res.credential.idToken
                     };

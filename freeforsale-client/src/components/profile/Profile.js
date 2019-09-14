@@ -64,6 +64,7 @@ class Profile extends Component {
 
         let profileMarkup = !loading ? (
             authenticated ? (
+            
             <Paper className={classes.paper}>
                 <div className={classes.profile}>
                     <div className="image-wrapper">
