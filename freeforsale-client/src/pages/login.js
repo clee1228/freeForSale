@@ -15,21 +15,9 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 // Redux Stuff (Connect this component to app)
 import { connect } from 'react-redux';
 import { loginUser, googleLogin, googleSignup } from '../redux/actions/userActions';
-
-//firebase
-import * as firebase from "firebase/app";
-import "firebase/auth";
-const config = {
-    apiKey: "AIzaSyBXS4rqKQYhY0HlBVT_YEgp7i18DfOaIT8",
-        authDomain: "freeforsale-227d7.firebaseapp.com",
-        databaseURL: "https://freeforsale-227d7.firebaseio.com",
-        projectId: "freeforsale-227d7",
-        storageBucket: "freeforsale-227d7.appspot.com",
-        messagingSenderId: "506630593887",
-        appId: "1:506630593887:web:84597ec0a867dde9"
-  };
-firebase.initializeApp(config);
   
+//Firebase
+import firebase, { auth } from '../util/firebase'
 
 //access global theme from App.js
 const styles = (theme) => ({ ...theme.spreadThis });

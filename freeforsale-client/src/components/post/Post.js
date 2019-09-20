@@ -73,7 +73,9 @@ class Post extends Component {
                 userHandle, 
                 postId, 
                 likeCount, 
-                commentCount
+                commentCount,
+                postTitle,
+                postPics,
             },
             user: {
                 authenticated,
@@ -85,6 +87,7 @@ class Post extends Component {
             <DeletePost postId={postId} />
         ) : null
 
+        //if post.image length == 0 return else
         return (
             <Card className={classes.card}>
                 <CardHeader
@@ -99,14 +102,18 @@ class Post extends Component {
                     title={userHandle}
                     subheader={dayjs(createdAt).fromNow()}/>
 
-            <CardMedia
-                    className={classes.media}
-                    image={CouchPhoto}
-                />
-             <CardContent>
-                <Typography variant="body2" component="p">{body}</Typography>
-                
-            </CardContent>
+                <CardHeader
+                    title={postTitle}/>
+
+                <CardMedia
+                        className={classes.media}
+                        image={CouchPhoto}
+                    />
+                <CardContent>
+                    <Typography variant="body2" component="p">{body}</Typography>
+                    
+                </CardContent>
+
 
         
             <CardActions disableSpacing>

@@ -60,8 +60,6 @@ export const googleSignup = (newUserData, history) => (dispatch) => {
     axios
         .post('/signupGoogleUser', newUserData) 
         .then((res) => {
-            console.log("user actions result = ",res)
-            console.log("user actions token =",res.data.fbToken)
             setAuthHeader(res.data.fbToken);
             dispatch(getUserData());
             history.push('/');
@@ -103,11 +101,11 @@ export const getUserData = () => (dispatch) => {
         .catch((err) => console.log(err));
  };
 
-
+ 
  export const uploadImage = (formData) => (dispatch) => {
      dispatch({ type: LOADING_USER });
      axios.post('/user/image', formData)
-        .then(() => {
+        .then((res) => {
             dispatch(getUserData());
         })
         .catch((err) => console.log(err));

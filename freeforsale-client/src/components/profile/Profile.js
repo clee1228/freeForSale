@@ -39,7 +39,8 @@ class Profile extends Component {
         formData.append('image', image, image.name);
 
         //send to userActions
-        this.props.uploadImage(formData);
+        this.props.uploadImage(formData)
+        
     };
 
     handleEditPic = () => {
