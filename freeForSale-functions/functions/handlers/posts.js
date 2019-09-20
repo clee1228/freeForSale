@@ -1,6 +1,7 @@
 const { db } = require('../util/admin');
 
 
+
 //first parameter = name of the route, second = the handler
 exports.getAllPosts = (req, res) => {
     db.collection('posts')
@@ -38,12 +39,17 @@ exports.postOne = (request, response) => {
     if(request.body.body.trim() === ''){
         return response.status(400).json({ body: 'Body must not be empty' });
     }
+    
 
     const requestedPost = {
         body: request.body.body,
+        postTitle: request.body.postTitle,
+        postPics: request.body.postPics,
         username: request.user.username,
         userImage: request.user.imageUrl,
     }
+
+    console.error('requestedPost =', requestedPost)
 
 
     db.doc(`/users/${requestedPost.username}`)
@@ -58,27 +64,29 @@ exports.postOne = (request, response) => {
         .then((name) => {
             const newPost = {
                 body: requestedPost.body,
+                postTitle: requestedPost.postTitle,
                 userHandle: name,
                 userImage: requestedPost.userImage,
                 username: requestedPost.username,
                 createdAt: new Date().toISOString(),
                 likeCount: 0,
-                commentCount: 0 
+                commentCount: 0,
+                postPics: requestedPost.postPics
             }
 
             console.error("new post = ", newPost)
 
-            db.collection('posts')
-            .add(newPost)
-            .then((doc) => {
-                const resPost = newPost;
-                resPost.postId = doc.id;
-                response.json(resPost);
-            })  
-            .catch((err) => {
-                response.status(500).json({ error: 'something went wrong '});
-                console.error(err);
-            })
+            // db.collection('posts')
+            // .add(newPost)
+            // .then((doc) => {
+            //     const resPost = newPost;
+            //     resPost.postId = doc.id;
+            //     response.json(resPost);
+            // })  
+            // .catch((err) => {
+            //     response.status(500).json({ error: 'something went wrong '});
+            //     console.error(err);
+            // })
         })
 };
 
