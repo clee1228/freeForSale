@@ -1,4 +1,6 @@
-const { db } = require('../util/admin');
+const { admin, db } = require('../util/admin');
+const config = require('../util/config');
+const firebase = require('firebase');
 
 
 
@@ -35,60 +37,143 @@ exports.getAllPosts = (req, res) => {
 
 
 //make one post
-exports.postOne = (request, response) => {
-    if(request.body.body.trim() === ''){
+exports.postOne = (req, res) => {
+    console.error('hello posts started')
+
+    const BusBoy = require('busboy');
+    const path = require('path');
+    const os = require('os');
+    const fs = require('fs');
+
+    const busboy = new BusBoy({ headers: req.headers });
+
+    // This object will accumulate all the fields, keyed by their name
+    const fields = {
+        username: req.user.username,
+        userImage: req.user.imageUrl
+    };
+
+    // This object will accumulate all the uploaded files, keyed by their name
+    const uploads = {};
+
+    // Process each non-file field in the form
+    busboy.on('field', (fieldname, val) => {
+        if(fieldname === 'title' && val === ''){
         return response.status(400).json({ body: 'Body must not be empty' });
     }
+        fields[fieldname] = val;
+    });
+    
+    const fileWrites = [];
+    const images = [];
+
+    // Process each file uploaded.
+    busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
+        // Note: os.tmpdir() points to an in-memory file system on GCF
+        // Thus, any files in it must fit in the instance's memory.
+
+        // console.log('File [%s]: filename=%j; encoding=%j; mimetype=%j',
+        //       fieldname, filename, encoding, mimetype);
+
+        if(mimetype !== 'image/jpeg' && mimetype !== 'image/png'){
+            return res.status(400).json({ error: 'Wrong file type submitted'});
+        } 
+
+        const imageExtension = filename.split('.')[filename.split('.').length - 1];
+        imageFileName = `${Math.round(Math.random() *  1000000000).toString()}.${imageExtension}`;
+        console.error('imageFileName = ', imageFileName)
+
+        const filepath = path.join(os.tmpdir(), imageFileName);
+        uploads[filename] = { name: imageFileName, path: filepath, type: mimetype };
+        images.push(imageFileName)
+
+        const writeStream = fs.createWriteStream(filepath);
+        file.pipe(writeStream);
+
+        // File was processed by Busboy; wait for it to be written to disk.
+        const promise = new Promise((resolve, reject) => {
+            file.on('end', () => {
+            writeStream.end();
+            });
+            writeStream.on('finish', resolve);
+            writeStream.on('error', reject);
+        });
+        fileWrites.push(promise);
+    });
+
+
+    // Triggered once all uploaded files are processed by Busboy.
+    // We still need to wait for the disk writes (saves) to complete.
+    busboy.on('finish', () => {
+        Promise.all(fileWrites).then(() => {
+            // Process saved files here
+            for (const name in uploads) {
+                const file = uploads[name];
+            
+                //Firebase Storage doesn't have it's own Node.js SDK (it's a browser-only system)
+                // Since these files are Cloud Storage objects in a Cloud Storage bucket,
+                // we can use the Cloud Storage SDK to interact with them in Node.js
+                admin
+                    .storage()
+                    .bucket()
+                    .upload(file.path, {
+                        resumable: false,
+                        metadata: {
+                            metadata: {
+                                contentType: file.type
+                            }
+                        }
+                    })
+
+                //delete files from node.js for synchronous file operations
+                fs.unlinkSync(file.path);
+            }
+        })
+        .then(() => {
+            db.doc(`/users/${fields.username}`)
+                .get()
+                .then((doc) => {
+                    if(doc.exists){
+                        return doc.data().userHandle;
+                    } else {
+                        return res.status(404).json({ error: 'User not found'});
+                    }
+                })
+                .then((name) => {
+                    const newPost = {
+                        title: fields.title,
+                        body: fields.body,
+                        pics: images,
+                        userHandle: name,
+                        username: fields.username,
+                        userImage: fields.userImage,
+                        createdAt: new Date().toISOString(),
+                        likeCount: 0,
+                        commentCount: 0, 
+                    }
+
+                    db.collection('posts')
+                        .add(newPost)
+                        .then((doc) => {
+                            const resPost = newPost;
+                            //add postID to the post
+                            resPost.postId = doc.id;
+                            res.json(resPost);
+                        })  
+                        .catch((err) => {
+                            res.status(500).json({ error: 'Something went wrong '});
+                            console.error(err);
+                        })
+                })
+        })
+    });
+            
+
+    busboy.end(req.rawBody);
+    };
+
     
 
-    const requestedPost = {
-        body: request.body.body,
-        postTitle: request.body.postTitle,
-        postPics: request.body.postPics,
-        username: request.user.username,
-        userImage: request.user.imageUrl,
-    }
-
-    console.error('requestedPost =', requestedPost)
-
-
-    db.doc(`/users/${requestedPost.username}`)
-        .get()
-        .then((doc) => {
-            if(doc.exists){
-                return doc.data().userHandle;
-            } else {
-                return res.status(404).json({ error: 'User not found'});
-            }
-        })
-        .then((name) => {
-            const newPost = {
-                body: requestedPost.body,
-                postTitle: requestedPost.postTitle,
-                userHandle: name,
-                userImage: requestedPost.userImage,
-                username: requestedPost.username,
-                createdAt: new Date().toISOString(),
-                likeCount: 0,
-                commentCount: 0,
-                postPics: requestedPost.postPics
-            }
-
-            console.error("new post = ", newPost)
-
-            // db.collection('posts')
-            // .add(newPost)
-            // .then((doc) => {
-            //     const resPost = newPost;
-            //     resPost.postId = doc.id;
-            //     response.json(resPost);
-            // })  
-            // .catch((err) => {
-            //     response.status(500).json({ error: 'something went wrong '});
-            //     console.error(err);
-            // })
-        })
-};
 
 //fetch post by postID
 exports.getPost = (req, res) => {

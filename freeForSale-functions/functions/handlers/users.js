@@ -313,7 +313,7 @@ exports.uploadPhoto = (req, res) => {
             }
         })
         .then(() => {
-            //TODO: construct URLS for each image and return all of the URLS in an array
+            //construct URLs for each image & return all URLS in an array
             //construct img URL to link to user 
             const imageUrl = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media`;
             return db.doc(`/users/${req.user.username}`).update({ imageUrl });
