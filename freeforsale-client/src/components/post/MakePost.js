@@ -81,6 +81,7 @@ class MakePost extends Component{
         name: '',
         errors: {},
         loadedPics: [],
+        picUrls: [],
         showUploader: false,
     };
 
@@ -115,32 +116,46 @@ class MakePost extends Component{
     handleSubmit = (event) => {
         event.preventDefault();
         let pics = this.state.loadedPics
-        const urls = []
+        let files = []
+        let fd = new FormData();
+        
 
-        pics.forEach((pic) => {
+        pics.forEach((pic, index) => {
             var file = this.dataURLtoFile(pic.url, pic.name)
-            firebase
-                .storage()
-                .ref()
-                .child(`postImages/${pic.name}`)
-                .put(file).then((snapshot) => {
-                    snapshot.ref.getDownloadURL().then((url) => {
-                        urls.push(url)
-                    })
-                })
-                .catch((err) => {
-                    console.log(err)
-                })
+            var i = index.toString()
+            files.push(file)
 
-        });     
-        console.log('urlzz = ', urls)
+            // firebase
+            //     .storage()
+            //     .ref()
+            //     .child(`postImages/${pic.name}`)
+            //     .put(file).then((snapshot) => {
+            //         snapshot.ref.getDownloadURL().then((url) => {
+            //             console.log('type = ', typeof url)
+            //             urls.push(url)
+            //         })
+            //     })
+            //     .catch((err) => {
+            //         console.log(err)
+            //     })
+        })
 
-        this.props.createPost({
-             body: this.state.body, 
-             postTitle: this.state.postTitle,
-             postPics: urls }
-             );
+        fd.append('title' , this.state.postTitle)
+        fd.append('body', this.state.body)
+        
+        for (var i=0;i<files.length; i++){
+            fd.append("fileToUpload[]", files[i], files[i].name)
+        }
+
+
+        for (var pair of fd.entries()){
+            console.log(pair[0], pair[1])
+        }
+
+        this.props.createPost(fd)
     };
+
+
 
     handleUpload = (event) => {
         const selectedPics = [...event.target.files]
@@ -166,8 +181,6 @@ class MakePost extends Component{
 
         var loaded =[]
         let files = pictureFiles
-        const formData = new FormData();
-        
         
         for (var i=0; i < pictureFiles.length; i++){
             let imgName;

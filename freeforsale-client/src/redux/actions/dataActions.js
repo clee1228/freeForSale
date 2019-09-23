@@ -56,17 +56,19 @@ export const createPost = (newPost) => (dispatch) => {
     axios
         .post('/post', newPost)
         .then((res) => {
-            dispatch({
-                type: CREATE_POST,
-                payload: res.data
-            });
-            dispatch(clearErrors());
+            console.log('DATA ACTIONS res.data = ', res.data)
+            // dispatch({
+            //     type: CREATE_POST,
+            //     payload: res.data
+            // });
+            // dispatch(clearErrors());
         })
         .catch((err) => {
-            dispatch({
-                type: SET_ERRORS,
-                payload: err.response.data
-            });
+            console.log('DATA ACTIONS error = ', err)
+            // dispatch({
+            //     type: SET_ERRORS,
+            //     payload: err.res.data
+            // });
         });
 };
 
