@@ -76,6 +76,11 @@ class Post extends Component {
         return urls
     }
 
+    getOneUrl = (images) => {
+        let url = `https://firebasestorage.googleapis.com/v0/b/freeforsale-227d7.appspot.com/o/${images[0]}?alt=media`;
+        return url
+    }
+
 
     render() {
         dayjs.extend(relativeTime);
@@ -103,7 +108,7 @@ class Post extends Component {
             <DeletePost postId={postId} />
         ) : null
 
-        const postMedia = images.length > 1 ? (
+        const postMedia = images && images.length > 1 ? (
             <div>
                 <FbImageLibrary 
                     images={this.getUrls(images)}
@@ -113,10 +118,10 @@ class Post extends Component {
                     />
             </div>
 
-        ) : images.length === 1? (
+        ) : images && images.length === 1? (
             <CardMedia
                 className={classes.media}
-                src={`https://firebasestorage.googleapis.com/v0/b/freeforsale-227d7.appspot.com/o/${images[0]}?alt=media`}
+                image={this.getOneUrl(images)}
             /> 
         ): (
             null
