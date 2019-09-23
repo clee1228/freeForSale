@@ -27,3 +27,7 @@ body{
 a{
   text-decoration: none;
 }
+
+input[type="file"] {
+  display: none !important;
+}
