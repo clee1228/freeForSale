@@ -43,7 +43,7 @@ const styles = (theme) => ({
     //     objectFit: 'cover'
     // }
     card: {
-        maxWidth: 580,
+        maxWidth: 650,
         marginBottom: 20,
         position: 'relative',
     },
@@ -83,7 +83,7 @@ class Post extends Component {
         const { 
             classes, 
             post : { 
-                postId,
+                postId, 
                 title,
                 body, 
                 images,

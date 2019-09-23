@@ -77,6 +77,7 @@ export default {
                 borderRadius: '50%'
             },
             '& .profile-details': {
+
                 textAlign: 'center',
                 '& span, svg': {
                     verticalAlign: 'middle'

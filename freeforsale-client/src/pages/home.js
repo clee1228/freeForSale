@@ -29,9 +29,11 @@ class home extends Component {
         );
 
         return (
-            <Grid container spacing={6}>
-                {/*small screens will have width of 8 */}
-                <Grid item sm={8} xs={12}>
+            <Grid container 
+                spacing={4}
+                justify="center"
+                >
+                <Grid item sm={6} xs={12} >
                     {recentPostsMarkup}
                 </Grid>
                 <Grid item sm={4} xs={12}>

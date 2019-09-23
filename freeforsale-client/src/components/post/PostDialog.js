@@ -60,7 +60,6 @@ class PostDialog extends Component{
     };
 
     componentDidMount() {
-        //LOOK HERE
         if(this.props.openDialog){
             this.handleOpen();
         }

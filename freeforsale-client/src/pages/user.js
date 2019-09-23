@@ -65,10 +65,10 @@ class user extends Component {
             //Rendering profile on side
             <Grid container spacing={10}>
                 <Grid item sm={8} xs={12}>
-                    <Typography variant="h6">Your Posts</Typography>
+                    <Typography variant="h6" style={{paddingBottom: 10}}>Your Posts</Typography>
                     {postsMarkup}
                 </Grid>
-                <Grid item sm={4} xs={12}>
+                <Grid item sm={4} xs={12} style={{paddingTop: 80}}>
                     {this.state.profile === null ? (
                         <ProfileSkeleton/>
                     ) : (
