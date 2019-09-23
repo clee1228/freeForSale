@@ -17,6 +17,8 @@
     "node-sass": "^4.12.0",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
+    "react-fb-image-grid": "^0.1.5",
+    "react-images-upload": "^1.2.7",
     "react-redux": "^7.1.1",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.1.1",

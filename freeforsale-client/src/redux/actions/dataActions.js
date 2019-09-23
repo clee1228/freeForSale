@@ -52,23 +52,21 @@ export const getPost = (postId) => (dispatch) => {
 // Create a post
 export const createPost = (newPost) => (dispatch) => {
     dispatch({ type: LOADING_UI });
-
     axios
         .post('/post', newPost)
         .then((res) => {
             console.log('DATA ACTIONS res.data = ', res.data)
-            // dispatch({
-            //     type: CREATE_POST,
-            //     payload: res.data
-            // });
-            // dispatch(clearErrors());
+            dispatch({
+                type: CREATE_POST,
+                payload: res.data
+            });
+            dispatch(clearErrors());
         })
         .catch((err) => {
-            console.log('DATA ACTIONS error = ', err)
-            // dispatch({
-            //     type: SET_ERRORS,
-            //     payload: err.res.data
-            // });
+            dispatch({
+                type: SET_ERRORS,
+                payload: err.res.data
+            });
         });
 };
 

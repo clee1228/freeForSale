@@ -9,6 +9,7 @@ import PostDialog from './PostDialog';
 import MyButton from '../../util/MyButton';
 import LikeButton from './LikeButton';
 import CouchPhoto from '../../images/couch.png';
+import FbImageLibrary from 'react-fb-image-grid';
 
 
 //MUI Stuff
@@ -35,47 +36,62 @@ import { CardHeader } from '@material-ui/core';
 import { red } from '@material-ui/core/colors';
 
 
-
-const styles = {
+const styles = (theme) => ({
+//    ...theme.spreadThis, 
     // content:{
     //     padding: 20,
     //     objectFit: 'cover'
     // }
-
     card: {
         maxWidth: 580,
         marginBottom: 20,
         position: 'relative',
-      },
-      media: {
+    },
+    media: {
         height: 0,
         paddingTop: '56.25%', // 16:9
-      },
-      expandOpen: {
+    },
+    expandOpen: {
         transform: 'rotate(180deg)',
-      },
-      avatar: {
-        width: 50,
-        height: 50,
-      },
-};
+    },
+    avatar: {
+        width: 45,
+        height: 45,
+    },
+    content:{
+        paddingTop: 7,
+        paddingLeft: 25,
+        paddingBottom: 7
+    }
+});
 
 class Post extends Component {
+
+    getUrls = (images) => {
+        let urls = []
+        for (var i=0; i < images.length; i++){
+            var url = `https://firebasestorage.googleapis.com/v0/b/freeforsale-227d7.appspot.com/o/${images[i]}?alt=media`;
+            urls.push(url)
+        }
+        return urls
+    }
+
+
     render() {
         dayjs.extend(relativeTime);
         //DESTRUCTURING - const classes = this.props.classes
         const { 
             classes, 
             post : { 
+                postId,
+                title,
                 body, 
+                images,
+                userHandle,
                 createdAt, 
-                userImage, 
-                userHandle, 
-                postId, 
-                likeCount, 
                 commentCount,
-                postTitle,
-                postPics,
+                likeCount, 
+                userImage
             },
             user: {
                 authenticated,
@@ -87,7 +103,25 @@ class Post extends Component {
             <DeletePost postId={postId} />
         ) : null
 
-        //if post.image length == 0 return else
+        const postMedia = images.length > 1 ? (
+            <div>
+                <FbImageLibrary 
+                    images={this.getUrls(images)}
+                    hideOverlay={true}
+                    // renderOverlay={() => ""}
+                    // overlayBackgroundColor='#ffffff'
+                    />
+            </div>
+
+        ) : images.length === 1? (
+            <CardMedia
+                className={classes.media}
+                src={`https://firebasestorage.googleapis.com/v0/b/freeforsale-227d7.appspot.com/o/${images[0]}?alt=media`}
+            /> 
+        ): (
+            null
+        )
+
         return (
             <Card className={classes.card}>
                 <CardHeader
@@ -102,16 +136,12 @@ class Post extends Component {
                     title={userHandle}
                     subheader={dayjs(createdAt).fromNow()}/>
 
-                <CardHeader
-                    title={postTitle}/>
+                {postMedia}
 
-                <CardMedia
-                        className={classes.media}
-                        image={CouchPhoto}
-                    />
-                <CardContent>
-                    <Typography variant="body2" component="p">{body}</Typography>
-                    
+
+                <CardContent className={classes.content}>
+                    <Typography align="left" variant="h6" className={classes.postTitle} >{title}</Typography>
+                    <Typography align="left" variant="body2" component="p">{body}</Typography>
                 </CardContent>
 
 
@@ -148,7 +178,6 @@ class Post extends Component {
                         
                         {userHandle}
                     </Typography>
-
 
                     {deleteButton}
 

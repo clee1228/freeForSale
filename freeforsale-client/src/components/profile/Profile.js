@@ -28,7 +28,9 @@ import KeyboardReturn from '@material-ui/icons/KeyboardReturn';
 import { connect } from 'react-redux';
 import { logout, uploadImage } from '../../redux/actions/userActions';
 
-const styles = (theme) => ({...theme.spreadThis});
+const styles = (theme) => ({
+    ...theme.spreadThis,
+});
 
 class Profile extends Component {
     handleImageChange = (event) => {
@@ -72,6 +74,7 @@ class Profile extends Component {
                         <img src={imageUrl} alt="profile" className="profile-image"/>
                         {/* onChange is triggered each time a file is selected*/}
                         <input 
+                            className={classes.photoInput}
                             type="file" 
                             id="imageInput"
                             hidden="hidden"

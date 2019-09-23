@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import MyButton from '../../util/MyButton';
-import PreviewContainer from './PreviewContainer'
 import ImageUploader from 'react-images-upload';
 
 //Firebase
@@ -311,29 +310,7 @@ class MakePost extends Component{
 
 
 
-                        {/* <div className="custom-file mb-4">
-                            <input 
-                                type="file" 
-                                multiple
-                                className="custom-file-input" 
-                                id="customFile"  
-                                hidden="hidden"
-                                onChange={this.handleUpload}/>
-
-                        </div>
-                        <div>
-
-                        <PreviewContainer
-                            uploadedPics={this.props.uploadedPics}
-                        /> */}
-
-                       
-                        
-                   
-                    {/* </div> */}
-
-
-                
+                    
                    
 
                     </DialogContent> 

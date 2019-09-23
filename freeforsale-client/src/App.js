@@ -54,7 +54,7 @@ class App extends Component {
       <Provider store={store}>
         <Router>
             <Navbar/>
-            <div className="container">
+            <div className="app-container">
               <Switch>
                 <Route exact path="/" component={home}/>
                 <AuthRoute 

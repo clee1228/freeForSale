@@ -65,6 +65,7 @@ class PostDialog extends Component{
             this.handleOpen();
         }
     }
+    
  
     handleOpen = () => {
         let oldPath = window.location.pathname;

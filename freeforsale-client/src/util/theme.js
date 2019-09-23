@@ -23,7 +23,6 @@ export default {
         form: {
           textAlign: 'center',
           height: 600
-
         },
         image: {
           //top, right, bottom, left
