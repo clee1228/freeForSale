@@ -123,20 +123,6 @@ class MakePost extends Component{
             var file = this.dataURLtoFile(pic.url, pic.name)
             var i = index.toString()
             files.push(file)
-
-            // firebase
-            //     .storage()
-            //     .ref()
-            //     .child(`postImages/${pic.name}`)
-            //     .put(file).then((snapshot) => {
-            //         snapshot.ref.getDownloadURL().then((url) => {
-            //             console.log('type = ', typeof url)
-            //             urls.push(url)
-            //         })
-            //     })
-            //     .catch((err) => {
-            //         console.log(err)
-            //     })
         })
 
         fd.append('title' , this.state.postTitle)
@@ -156,25 +142,25 @@ class MakePost extends Component{
 
 
 
-    handleUpload = (event) => {
-        const selectedPics = [...event.target.files]
-        selectedPics.forEach((file) => {
-            firebase
-                .storage()
-                .ref()
-                .child(`postImages/${file.name}`)
-                .put(file).then((snapshot) => {
-                    snapshot.ref.getDownloadURL().then((url) => {
-                        this.state.uploadedPics.push(url)
-                    })
-                })
-        });     
-    }
+    // handleUpload = (event) => {
+    //     const selectedPics = [...event.target.files]
+    //     selectedPics.forEach((file) => {
+    //         firebase
+    //             .storage()
+    //             .ref()
+    //             .child(`postImages/${file.name}`)
+    //             .put(file).then((snapshot) => {
+    //                 snapshot.ref.getDownloadURL().then((url) => {
+    //                     this.state.uploadedPics.push(url)
+    //                 })
+    //             })
+    //     });     
+    // }
 
-    openFileBrowser = () => {
-        const fileInput = document.getElementById('customFile');
-        fileInput.click();
-    };
+    // openFileBrowser = () => {
+    //     const fileInput = document.getElementById('customFile');
+    //     fileInput.click();
+    // };
 
     onDrop = (pictureFiles) => {
 
@@ -295,23 +281,7 @@ class MakePost extends Component{
                             )}
                         
                     </Button>
-
-
-
-
-                    
-                        </form>
-
-
-                    
-                    
-                    
-                            
-
-
-
-                    
-                   
+                    </form>
 
                     </DialogContent> 
                     </Dialog>

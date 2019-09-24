@@ -4,12 +4,12 @@ import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import PropTypes from 'prop-types';
-import DeletePost from './DeletePost';
 import PostDialog from './PostDialog';
 import MyButton from '../../util/MyButton';
 import LikeButton from './LikeButton';
 import CouchPhoto from '../../images/couch.png';
 import FbImageLibrary from 'react-fb-image-grid';
+import PostOptions from './PostOptions';
 
 
 //MUI Stuff
@@ -67,6 +67,7 @@ const styles = (theme) => ({
 
 class Post extends Component {
 
+
     getUrls = (images) => {
         let urls = []
         for (var i=0; i < images.length; i++){
@@ -104,10 +105,9 @@ class Post extends Component {
             }
         } = this.props;
 
-        const deleteButton = authenticated && userHandle === username ? (
-            <DeletePost postId={postId} />
-        ) : null
 
+        
+        //TODO: postMedia loads late post will appear w/o pics sometimes & have to refresh
         const postMedia = images && images.length > 1 ? (
             <div>
                 <FbImageLibrary 
@@ -134,12 +134,15 @@ class Post extends Component {
                         <Avatar src={userImage} className={classes.avatar}/>
                     }
                     action={
-                        <IconButton aria-label="options">
-                            <MoreVertIcon />
-                        </IconButton>
+                        <PostOptions
+                            postUser={userHandle}
+                            postId={postId}/>
                     }
-                    title={userHandle}
-                    subheader={dayjs(createdAt).fromNow()}/>
+                    title={<Link to={`/user/${userHandle}`}>{userHandle}</Link>}
+                    subheader={dayjs(createdAt).fromNow()}>
+
+
+                </CardHeader>
 
                 {postMedia}
 
@@ -169,25 +172,20 @@ class Post extends Component {
 
 
             
-                /* <CardMedia 
-                image={userImage}
-                title="Profile Image"
-                className={classes.image}/>
-
-                <CardContent className={classes.content}>
-                    <Typography 
-                        variant="h5" 
-                        component={Link} 
-                        to={`/user/${userHandle}`}
-                        color="primary"> 
+            //     <CardContent className={classes.content}>
+            //         <Typography 
+            //             variant="h5" 
+            //             component={Link} 
+            //             to={`/user/${userHandle}`}
+            //             color="primary"> 
                         
-                        {userHandle}
-                    </Typography>
+            //             {userHandle}
+            //         </Typography>
 
-                    {deleteButton}
+            //         {deleteButton}
 
-                </CardContent>
-            </Card> */
+            //     </CardContent>
+            // </Card> 
             
         )
     }
@@ -198,7 +196,7 @@ Post.propTypes = {
     user: PropTypes.object.isRequired,
     post: PropTypes.object.isRequired,
     classes: PropTypes.object.isRequired,
-    openDialog: PropTypes.bool
+    openDialog: PropTypes.bool,
 };
 
 const mapStateToProps = (state) => ({
