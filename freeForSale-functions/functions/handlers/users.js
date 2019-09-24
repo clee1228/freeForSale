@@ -200,7 +200,9 @@ exports.getUserDetails = (req, res) => {
             data.forEach((doc) => {
                 console.error('doc = ', doc)
                 userData.posts.push({
+                    title: doc.data().title,
                     body: doc.data().body,
+                    images: doc.data().pics,
                     createdAt: doc.data().createdAt,
                     userHandle: doc.data().userHandle,
                     username: doc.data().username,

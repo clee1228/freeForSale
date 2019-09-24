@@ -1,8 +1,4 @@
 const { admin, db } = require('../util/admin');
-const config = require('../util/config');
-const firebase = require('firebase');
-
-
 
 //first parameter = name of the route, second = the handler
 exports.getAllPosts = (req, res) => {
@@ -16,7 +12,9 @@ exports.getAllPosts = (req, res) => {
                 //doc.data = fn that returns data inside document
                 posts.push({
                     postId: doc.id,
+                    title: doc.data().title,
                     body: doc.data().body,
+                    images: doc.data().pics,
                     userHandle: doc.data().userHandle,
                     username: doc.data().username,
                     createdAt: doc.data().createdAt,
@@ -86,6 +84,7 @@ exports.postOne = (req, res) => {
         const filepath = path.join(os.tmpdir(), imageFileName);
         uploads[filename] = { name: imageFileName, path: filepath, type: mimetype };
         images.push(imageFileName)
+        console.error('images = ', images)
 
         const writeStream = fs.createWriteStream(filepath);
         file.pipe(writeStream);
@@ -126,7 +125,7 @@ exports.postOne = (req, res) => {
                     })
 
                 //delete files from node.js for synchronous file operations
-                fs.unlinkSync(file.path);
+                // fs.unlinkSync(file.path);
             }
         })
         .then(() => {
@@ -152,6 +151,7 @@ exports.postOne = (req, res) => {
                         commentCount: 0, 
                     }
 
+
                     db.collection('posts')
                         .add(newPost)
                         .then((doc) => {
@@ -173,8 +173,6 @@ exports.postOne = (req, res) => {
     };
 
     
-
-
 //fetch post by postID
 exports.getPost = (req, res) => {
     let postData = {};
@@ -347,6 +345,7 @@ exports.unlikePost = (req, res) => {
 
 //delete a post
 exports.delPost = (req, res) => {
+    //delete pics too
     const document = db.doc(`/posts/${req.params.postId}`);
     document
         .get()
@@ -357,6 +356,22 @@ exports.delPost = (req, res) => {
             if(doc.data().username !== req.user.username){
                 return res.status(403).json({ error: 'unauthorized'});
             } else {
+                const pics = doc.data().pics
+                console.error('pics = ', pics)
+
+                for (var pic in pics){
+                    var picName = pics[pic]
+                    console.error('picName = ', picName)
+                    admin
+                        .storage()
+                        .bucket()
+                        .file(picName)
+                        .delete()
+                        .then(() => {
+                            console.error('deleted = ', picName)
+                        })
+                }
+
                 return document.delete();
             }
         })
