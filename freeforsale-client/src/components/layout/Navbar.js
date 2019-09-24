@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 // Components 
 import MyButton from '../../util/MyButton';
@@ -217,12 +217,18 @@ export class Navbar extends Component {
                                     placement="top"
                                     title="Messages">
 
-                                    <IconButton color="inherit">
+                                <Link to="/messenger">
+                                    <IconButton 
+                                        // component={Link}
+                                        // to="/messenger"
+                                        color="inherit">
                                         <Badge badgeContent={4} color="secondary">
                                             <ChatIcon className={classes.chatIcon}/>
                                         </Badge>
                                     </IconButton>
+                                </Link>
                                 </Tooltip>
+
                                         
                                 <Notifications/>
                                 <ProfileNav />

@@ -23,6 +23,7 @@ import themeFile from './util/theme'; //same lvl
 import home from './pages/home';
 import login from './pages/login';
 import signup from './pages/signup';
+import messenger from './pages/messenger';
 import user from './pages/user';
 
 const theme = createMuiTheme(themeFile);
@@ -32,7 +33,6 @@ axios.defaults.baseURL = 'https://us-central1-freeforsale-227d7.cloudfunctions.n
 const token = localStorage.FBIdToken;
 if(token){
   const decodedToken = jwtDecode(token);
-  console.log(decodedToken);
   //checking if token expired
   if(decodedToken.exp * 1000 < Date.now()){
     //logs us out and deletes token
@@ -54,8 +54,15 @@ class App extends Component {
       <Provider store={store}>
         <Router>
             <Navbar/>
+            <div className="messenger-container">
+                <Route 
+                  exact path="/messenger" 
+                  component={messenger} />
+                
+              {/* </Switch> */}
+            </div> 
             <div className="app-container">
-              <Switch>
+              {/* <Switch> */}
                 <Route exact path="/" component={home}/>
                 <AuthRoute 
                   exact path="/login" 
@@ -69,8 +76,9 @@ class App extends Component {
                 <Route 
                   exact path="/user/:username/post/:postId"  
                   component={user} />
-              </Switch>
-            </div> 
+                  
+            </div>
+            
         </Router>
       </Provider>
       </MuiThemeProvider>

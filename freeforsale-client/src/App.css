@@ -14,6 +14,11 @@ body{
   max-width: 1000px;
 }
 
+.messenger-container{
+  margin: 75px auto 0 auto;
+  max-width: none;
+}
+
 /*auto sets at middle middle*/
 .nav-container{
   margin: left;

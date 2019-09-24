@@ -18,7 +18,7 @@ import { signupUser } from '../redux/actions/userActions';
 //access global theme from App.js
 const styles = (theme) => ({ ...theme.spreadThis })
 
-export class signup extends Component {
+class signup extends Component {
     constructor(){
         super();
         this.state = {
