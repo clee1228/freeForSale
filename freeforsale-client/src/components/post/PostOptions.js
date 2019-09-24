@@ -12,7 +12,7 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
-import CircularProgress from '@material-ui/core/CircularProgress';
+
 
 // Icons
 import MoreVertIcon from '@material-ui/icons/MoreVert';
@@ -23,9 +23,6 @@ import { deletePost } from '../../redux/actions/dataActions';
 
 const styles = (theme) => ({
     ...theme.spreadThis, 
-    progressSpinner: { 
-        position: 'absolute'
-    }
 });
 
 
@@ -134,7 +131,10 @@ class PostOptions extends Component{
                             Are you sure you want to delete this post?
                         </DialogTitle>
                         <DialogActions>
-                            <Button onClick={this.deleteClick} color="primary">
+                            <Button 
+                                onClick={this.deleteClick} 
+                                color="primary"
+                            >
                                 Cancel
                             </Button>
                             <Button 
@@ -143,11 +143,7 @@ class PostOptions extends Component{
                                 disabled={loading}
                             >
                                 Delete
-                                {loading && (
-                                    <CircularProgress 
-                                    size={20}
-                                    className={classes.progressSpinner}/>
-                                )}
+                                
                             </Button>
                         </DialogActions>
                 </Dialog>

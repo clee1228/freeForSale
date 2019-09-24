@@ -66,26 +66,9 @@ const styles = (theme) => ({
 });
 
 class Post extends Component {
-
-
-    getUrls = (images) => {
-        let urls = []
-        for (var i=0; i < images.length; i++){
-            var url = `https://firebasestorage.googleapis.com/v0/b/freeforsale-227d7.appspot.com/o/${images[i]}?alt=media`;
-            urls.push(url)
-        }
-        return urls
-    }
-
-    getOneUrl = (images) => {
-        let url = `https://firebasestorage.googleapis.com/v0/b/freeforsale-227d7.appspot.com/o/${images[0]}?alt=media`;
-        return url
-    }
-
-
     render() {
         dayjs.extend(relativeTime);
-        //DESTRUCTURING - const classes = this.props.classes
+        //DESTRUCTURING 
         const { 
             classes, 
             post : { 
@@ -93,6 +76,7 @@ class Post extends Component {
                 title,
                 body, 
                 images,
+                imgUrls,
                 userHandle,
                 createdAt, 
                 commentCount,
@@ -104,28 +88,6 @@ class Post extends Component {
                 creds: { username }
             }
         } = this.props;
-
-
-        
-        //TODO: postMedia loads late post will appear w/o pics sometimes & have to refresh
-        const postMedia = images && images.length > 1 ? (
-            <div>
-                <FbImageLibrary 
-                    images={this.getUrls(images)}
-                    hideOverlay={true}
-                    // renderOverlay={() => ""}
-                    // overlayBackgroundColor='#ffffff'
-                    />
-            </div>
-
-        ) : images && images.length === 1? (
-            <CardMedia
-                className={classes.media}
-                image={this.getOneUrl(images)}
-            /> 
-        ): (
-            null
-        )
 
         return (
             <Card className={classes.card}>
@@ -144,7 +106,28 @@ class Post extends Component {
 
                 </CardHeader>
 
-                {postMedia}
+
+                {imgUrls && imgUrls.length > 1 ? (
+                    <div>
+                        <FbImageLibrary
+                            images={imgUrls}
+                            hideOverlay={true}
+                            // renderOverlay={() => ""}
+                            // overlayBackgroundColor='#ffffff'
+                        />
+                    </div>
+
+                ): imgUrls && imgUrls.length === 1 ? (
+                    <div>
+                        <CardMedia
+                            className={classes.media}
+                            image={imgUrls[0]}
+                        /> 
+                    </div>
+
+                ):(
+                    null
+                )}
 
 
                 <CardContent className={classes.content}>
@@ -168,25 +151,6 @@ class Post extends Component {
                         openDialog={this.props.openDialog}/>
             </CardActions>
             </Card>
-
-
-
-            
-            //     <CardContent className={classes.content}>
-            //         <Typography 
-            //             variant="h5" 
-            //             component={Link} 
-            //             to={`/user/${userHandle}`}
-            //             color="primary"> 
-                        
-            //             {userHandle}
-            //         </Typography>
-
-            //         {deleteButton}
-
-            //     </CardContent>
-            // </Card> 
-            
         )
     }
 }
