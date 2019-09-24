@@ -202,6 +202,7 @@ exports.getUserDetails = (req, res) => {
                 userData.posts.push({
                     title: doc.data().title,
                     body: doc.data().body,
+                    imgUrls: doc.data().imgUrls,
                     images: doc.data().pics,
                     createdAt: doc.data().createdAt,
                     userHandle: doc.data().userHandle,

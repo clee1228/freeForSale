@@ -1,4 +1,5 @@
 const { admin, db } = require('../util/admin');
+const config = require('../util/config');
 
 //first parameter = name of the route, second = the handler
 exports.getAllPosts = (req, res) => {
@@ -15,6 +16,7 @@ exports.getAllPosts = (req, res) => {
                     title: doc.data().title,
                     body: doc.data().body,
                     images: doc.data().pics,
+                    imgUrls: doc.data().imgUrls,
                     userHandle: doc.data().userHandle,
                     username: doc.data().username,
                     createdAt: doc.data().createdAt,
@@ -64,6 +66,7 @@ exports.postOne = (req, res) => {
     
     const fileWrites = [];
     const images = [];
+    const urls = [];
 
     // Process each file uploaded.
     busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
@@ -139,10 +142,19 @@ exports.postOne = (req, res) => {
                     }
                 })
                 .then((name) => {
+                    
+                    
+                    for (var img in images){
+                        var imgName = images[img]
+                        const imageUrl = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imgName}?alt=media`;
+                        urls.push(imageUrl)
+                    }
+
                     const newPost = {
                         title: fields.title,
                         body: fields.body,
                         pics: images,
+                        imgUrls: urls,
                         userHandle: name,
                         username: fields.username,
                         userImage: fields.userImage,
@@ -150,7 +162,6 @@ exports.postOne = (req, res) => {
                         likeCount: 0,
                         commentCount: 0, 
                     }
-
 
                     db.collection('posts')
                         .add(newPost)
@@ -361,15 +372,11 @@ exports.delPost = (req, res) => {
 
                 for (var pic in pics){
                     var picName = pics[pic]
-                    console.error('picName = ', picName)
                     admin
                         .storage()
                         .bucket()
                         .file(picName)
                         .delete()
-                        .then(() => {
-                            console.error('deleted = ', picName)
-                        })
                 }
 
                 return document.delete();
